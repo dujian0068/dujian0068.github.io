@@ -12,10 +12,7 @@ Author: Pedro Oliveira <kanytu@gmail . com>
 */
 .hljs {
   color: #a9b7c6;
- /** background: #282b2e*/
-  /*background: rgba(40, 43, 46, 0)*/
-  background: #ed0e3f
-
+  background: rgba(43,43,43,.9);
 }
 .hljs-number,
 .hljs-literal,

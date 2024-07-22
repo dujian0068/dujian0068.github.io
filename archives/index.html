@@ -27,11 +27,16 @@
 
 
 <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
 <script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
-<link
-    rel="stylesheet"
-    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
-/>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
 <script src="/js/lib/highlight.js"></script>
 
 
@@ -39,6 +44,8 @@
 <script src="/js/lib/preview.js"></script>
 
 
+
+<script src="/js/lib/search.js"></script>
 
 
 
@@ -50,8 +57,8 @@
         <transition name="fade">
             <div id="loading" v-show="loading">
                 <div id="loading-circle">
-                    <h2>LOADING</h2>
-                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
                     <img src="/images/loading.gif" />
                 </div>
             </div>
@@ -152,6 +159,8 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             
 <div id="archives">
+    
+    <input id="search-bar" class="input" placeholder="搜索" v-model="rawSearch" />
     
     <div id="timeline-wrap" ref="timeline">
         

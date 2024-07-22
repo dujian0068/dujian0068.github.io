@@ -27,11 +27,16 @@
 
 
 <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
 <script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
-<link
-    rel="stylesheet"
-    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
-/>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
 <script src="/js/lib/highlight.js"></script>
 
 
@@ -54,8 +59,8 @@
         <transition name="fade">
             <div id="loading" v-show="loading">
                 <div id="loading-circle">
-                    <h2>LOADING</h2>
-                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
                     <img src="/images/loading.gif" />
                 </div>
             </div>
@@ -159,12 +164,15 @@
         <h1>test_my_site</h1>
     </div>
     <div class="info">
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2024/7/19
             </span>
-            2024/7/19
-        </span>
+        
+
         
         
     </div>
@@ -192,6 +200,10 @@
     
     
     
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
     
     
     
@@ -228,6 +240,23 @@
     <script src="/js/main.js"></script>
     
     
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
 
 
 

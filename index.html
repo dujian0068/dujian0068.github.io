@@ -27,11 +27,16 @@
 
 
 <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
 <script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
-<link
-    rel="stylesheet"
-    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
-/>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
 <script src="/js/lib/highlight.js"></script>
 
 
@@ -52,8 +57,8 @@
         <transition name="fade">
             <div id="loading" v-show="loading">
                 <div id="loading-circle">
-                    <h2>LOADING</h2>
-                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
                     <img src="/images/loading.gif" />
                 </div>
             </div>
@@ -181,6 +186,41 @@
         
 
 <div class="post">
+    <a href="/2024/07/19/hello-world/">
+        <h2 class="post-title">Hello World</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar-days"></i>
+            </span>
+            2024/7/19
+        </span>
+        
+        
+        <span class="special">
+            <i class="fa-solid fa-grip-vertical fa-fw"></i>
+        </span>
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <p>Normal <em>Italic</em> <strong>Strong</strong></p>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        
+        
+    </div>
+    <a href="/2024/07/19/hello-world/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
     <a href="/2024/07/19/test-my-site/">
         <h2 class="post-title">test_my_site</h2>
     </a>
@@ -188,11 +228,15 @@
         
         <span class="date">
             <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
+                <i class="fa-solid fa-calendar-days"></i>
             </span>
             2024/7/19
         </span>
         
+        
+        <span class="special">
+            <i class="fa-solid fa-grip-vertical fa-fw"></i>
+        </span>
         
     </div>
     <div class="description">
@@ -227,49 +271,6 @@
     <a href="/2024/07/19/test-my-site/" class="go-post">阅读全文</a>
 </div>
 
-<div class="post">
-    <a href="/2024/07/19/hello-world/">
-        <h2 class="post-title">Hello World</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2024/7/19
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        
-        
-    </div>
-    <a href="/2024/07/19/hello-world/" class="go-post">阅读全文</a>
-</div>
-
 
         <div class="page-current">
     
@@ -290,8 +291,29 @@
         </div>
         <div class="name">Du Jian</div>
         <div class="description">
-            <p>你相信光吗<br>…</p>
+            
+            <p>你相信光吗</p>
 
+        </div>
+        
+        <div class="icon-links">
+            
+            <span class="icon-link">
+                <a target="_blank" rel="noopener" href="https://github.com/dujian0068">
+                    <i
+                        class="fa-brands fa-github fa-fw"
+                    ></i>
+                </a>
+            </span>
+            
+            <span class="icon-link">
+                <a href="mailto:1426703092@qq.com">
+                    <i
+                        class="fa-solid fa-envelope fa-fw"
+                    ></i>
+                </a>
+            </span>
+            
         </div>
         
         
