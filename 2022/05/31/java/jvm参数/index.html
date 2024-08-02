@@ -1,0 +1,496 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>常用的JVM参数 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>常用的JVM参数</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/5/31
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/note/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                note
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/jvm/" style="color: #03a9f4">
+                    jvm
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E5%A0%86">堆</a></li>
+<li><a href="#%E6%A0%88">栈</a><span id="more"></span></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E5%8C%BA">方法区</a></li>
+<li><a href="#%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8">垃圾收集器</a></li>
+<li><a href="#GC%E7%AD%96%E7%95%A5">GC策略</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+</ul>
+<h4 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h4><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">参数</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center"><code>-Xms</code></td>
+<td align="center">JVM启动时申请的初始Heap值, eg:-Xms1G 堆内存初始值为1G</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center"><code>-XX:InitialHeapSize</code></td>
+<td align="center">JVM启动时申请的初始Heap值，eg:-XX:InitialHeapSize&#x3D;1024m， 堆内存初始值为1G</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center"><code>-XX:MaxHeapFreeRation</code></td>
+<td align="center">缩小堆内存的时机，默认当堆中空闲内存大于70%时，会减小堆内存，最小到<code>-Xms</code>指定值； eg：-XX:MaxHeapFreeRation&#x3D;70，</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>-Xmx</code></td>
+<td align="center">JVM可申请的最大Heap值，eg：-Xmx2g 堆最大值为2G</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>-XX:MaxHeapSize</code></td>
+<td align="center">JVM可申请的最大Heap值，-XX:MaxHeapSize&#x3D;2048m 堆最大值为2G</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center"><code>-XX:MinHeapFreeRatio</code></td>
+<td align="center">扩大堆内存的时机，默认当堆内存1使用率大于40%时，会扩大堆内存，最大到<code>-Xmx</code>指定值， eg：-XX:MinHeapFreeRatio&#x3D;50，堆区内存使用到达50%触发堆区扩容</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center"><code>-Xmn</code></td>
+<td align="center">Java Heap Young区大小， eg：-Xmn512m，新生代大小为512MB</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center"><code>-XX:SurvivorRation</code></td>
+<td align="center">survivor区和Eden区大小比率,eg:-XX:SurvivorRation&#x3D;8, s0:s1:eden &#x3D; 1:1：8</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center"><code>-XX:NewRatio</code></td>
+<td align="center">新生代和老年代的占比，eg：-XX:NewRatio&#x3D;4 新生代：老年代&#x3D;1：4</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center"><code>-XX:PretenureSizeThreshold</code></td>
+<td align="center">指定大对象的界限，超过这个值，对象会直接在老年代分配。eg：-XX:PretenureSizeThreshold&#x3D;1024 对象大小超过1024子节，直接在老年代分配内存</td>
+</tr>
+</tbody></table>
+<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">参数</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center"><code>-Xss</code></td>
+<td align="center">指定单个虚拟机栈的大小, eg：-Xss1m 设置虚拟机栈大小为1MB</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center"><code>-XX:ThreadStackSize</code></td>
+<td align="center">指定单个虚拟机栈的大小, eg：-XX:ThreadStackSize&#x3D;1m 设置虚拟机栈大小为1MB</td>
+</tr>
+</tbody></table>
+<p><strong>栈大小太小会导致栈深度不够抛出<code>StackOverflowException</code>异常，栈太大又会导致线程可以创建的线程数减少。</strong><br><strong>另外，操作系统用对单个线程可以创建的栈数量又限制，线程并不能无限生成</strong></p>
+<h4 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h4><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">参数</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center"><code>-XX:PermSize</code></td>
+<td align="center">方法区初始容量， eg：-XX:PermSize&#x3D;64m， 方法区初始大小为64M</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center"><code>-XX:MaxPermSize</code></td>
+<td align="center">方法区初始容量， eg：-XX:PermSize&#x3D;512m， 方法区最大为512M</td>
+</tr>
+</tbody></table>
+<h4 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h4><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">参数</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center"><code>-XX:+UseSerialGC</code></td>
+<td align="center">新生代开启使用Serial垃圾收集器，老年代需要使用SerialOld</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center"><code>-XX:-UseSerialGC</code></td>
+<td align="center">新生代关闭使用Serial垃圾收集器</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center"><code>-XX:+UseParNewGC</code></td>
+<td align="center">新生代开启使用ParNew垃圾收集器， 老年代需要使用功能CMS</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>-XX:-UseParNewGC</code></td>
+<td align="center">新生代关闭使用ParNew垃圾收集器</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>-XX:+UseConcMarkSweepGC</code></td>
+<td align="center">老年代开启使用CMS垃圾收集器</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center"><code>-XX:-UseConcMarkSweepGC</code></td>
+<td align="center">老年代关闭使用CMS垃圾收集器</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center"><code>-XX:+UseG1GC</code></td>
+<td align="center">开启使用G1垃圾收集器</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center"><code>-XX:-UseG1GC</code></td>
+<td align="center">关闭使用G1垃圾收集器</td>
+</tr>
+</tbody></table>
+<h4 id="GC策略"><a href="#GC策略" class="headerlink" title="GC策略"></a>GC策略</h4><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">参数</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center"><code>-XX:+PrintGCDetails</code></td>
+<td align="center">打印详细GC日志</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center"><code>-XX:+PrintGCApplicationStoppedTime</code></td>
+<td align="center">打印暂停时间</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center"><code>-XX:InitialTenuringThreshol</code></td>
+<td align="center">进入老年代最小的GC年龄， 每经历一次Minor GC，年龄+1</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>-Xloggc:</code></td>
+<td align="center">设置GC日志文件路径</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>-XX:+PrintHeapAtGC</code></td>
+<td align="center">GC完成后打印JVM堆中各个区域使用情况</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center"><code>-XX:+PrintTenuringDistribution</code></td>
+<td align="center">打印存活实例的年龄信息</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center"><code>-XX:+HeapDumpBeforeFullGC</code></td>
+<td align="center">FULL GC前生成dump文件</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center"><code>-XX:+HeapDumpAfterFullGC</code></td>
+<td align="center">FULL GC后生成dump文件</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center"><code>-XX:HeapDumpPath</code></td>
+<td align="center">设置Dump保存的路径</td>
+</tr>
+</tbody></table>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">参数</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center"><code>-XX:+PrintFlagsInitial</code></td>
+<td align="center">查看所有的JVM参数，可以用来模糊查找</td>
+</tr>
+</tbody></table>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>

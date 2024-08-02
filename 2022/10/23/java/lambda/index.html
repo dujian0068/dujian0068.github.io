@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>lambda表达式 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>lambda表达式</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/10/23
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/note/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                note
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/java/" style="color: #ff7d73">
+                    java
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3">函数式接口</a></li>
+<li><a href="#lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AE%80%E4%BB%8B">lambda 表达式简介</a><ul>
+<li><a href="#%E7%90%86%E8%A7%A3lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E2%80%94%E2%80%94%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB">理解lambda表达式——匿名内部类</a><span id="more"></span></li>
+<li><a href="#lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%AD%E6%B3%95">lambda表达式语法</a></li>
+<li><a href="#lambda%E8%A1%8C%E4%B8%BA%E5%8F%82%E6%95%B0%E5%8C%96">lambda行为参数化</a></li>
+</ul>
+</li>
+<li><a href="#lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F">lambda表达式的作用域</a><ul>
+<li><a href="#this-%E5%92%8C-super,-lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9C%9F%E4%B8%8D%E6%98%AF%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB">this 和 super, lambda表达式真不是匿名内部类</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F">变量作用域</a></li>
+</ul>
+</li>
+<li><a href="#java8-%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3">java8+中的函数式接口</a></li>
+</ul>
+<h2 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h2><p>如果一个<code>Java</code>接口类包含且仅包含一个无默认实现的方法定义，那么他被称为函数式接口。这个方法定义了接口的预期用途。<br><code>@FunctionalInterface</code>注解指示一个接口类是一个函数接口，不允许有多个没有默认实现的接口，但不强制要求在接口上添加该注解</p>
+<p>示例1：定义一个函数式接口</p>
+<pre><code class="java">@FunctionalInterface
+public interface MyFunctionalInterface &#123;
+    // the single abstract method
+    void function();
+&#125;
+</code></pre>
+<p>示例1中有且仅有没有默认实现的方法定义——<code>function()</code>, 因此它是一个功能接口。</p>
+<h2 id="lambda-表达式简介"><a href="#lambda-表达式简介" class="headerlink" title="lambda 表达式简介"></a>lambda 表达式简介</h2><h4 id="理解lambda表达式——匿名内部类"><a href="#理解lambda表达式——匿名内部类" class="headerlink" title="理解lambda表达式——匿名内部类"></a>理解lambda表达式——匿名内部类</h4><p><code>lambda</code>表达式本质上是一个匿名函数，用于实现一个函数接口定义的功能（不能理解的话可以看作是一个匿名对象，后面会专门说区别）。</p>
+<h4 id="lambda表达式语法"><a href="#lambda表达式语法" class="headerlink" title="lambda表达式语法"></a>lambda表达式语法</h4><p><code>lambda</code>表达式的一般语法是:</p>
+<pre><code class="java">(Parameters) -&gt; &#123; Body &#125;
+</code></pre>
+<p><code>Parameters</code>为函数的入参，放在<code>()</code>中，与方法定义相同，<code>lambda</code>表达式的实现放在<code>&#123;&#125;</code>中</p>
+<p><strong>注意</strong></p>
+<ul>
+<li>参数的类型声明是<strong>可选</strong>的，编译器可以统一识别参数类型。明确声明参数类型的<code>lambda</code>表达式称为<strong>显示</strong><code>lambda</code>表达式，反之称之为<strong>隐式</strong><code>lambda</code>表达式</li>
+<li><code>()</code>是<strong>可选</strong>的，当参数有且仅有一个时，可以省略小括号，否则必须保留</li>
+<li><code>&#123;&#125;</code>是<strong>可选</strong>的，如果实现的主题只有一条语句，则可以省略，反之必须保留</li>
+<li>返回关键字<code>retuen</code>是<strong>可选</strong>的，在省略<code>&#123;&#125;</code>的同时，如果表达式有返回值可以省略关键字<code>retuen</code></li>
+</ul>
+<p>示例2：</p>
+<pre><code class="java">// 给定一个值x，返回其的3倍
+(int x) -&gt;&#123;return x*3;&#125;;
+// 省略可选项后定义如下：
+x -&gt; x * 3;
+</code></pre>
+<h4 id="lambda行为参数化"><a href="#lambda行为参数化" class="headerlink" title="lambda行为参数化"></a>lambda行为参数化</h4><p>可以将<code>lambda</code>表达式作为参数传递给方，就像传递一个普通的对象一样<br>示例3：</p>
+<pre><code class="java">public class Test &#123;
+    public static void main(String[] argv) &#123;
+        doWork((x,y)-&gt; x + y, 4, 2);
+    &#125;
+
+    // (x,y)-&gt; x + y  即为Function 函数接口的实现
+    private static int doWork(Function function, int x, int y)&#123;
+        return function.cal(x,y);
+    &#125;
+
+    // 定义一个函数接口， 对两个整形进行计算
+    @FunctionalInterface
+    interface Function&#123;
+        int cal(int x, int y);
+    &#125;
+&#125;
+</code></pre>
+<h2 id="lambda表达式的作用域"><a href="#lambda表达式的作用域" class="headerlink" title="lambda表达式的作用域"></a>lambda表达式的作用域</h2><h4 id="this-和-super-，lambda表达式真不是匿名内部类"><a href="#this-和-super-，lambda表达式真不是匿名内部类" class="headerlink" title="this 和 super ，lambda表达式真不是匿名内部类"></a>this 和 super ，lambda表达式真不是匿名内部类</h4><p><code>lambda</code>表达式使用时不会生成新的对象，也就不会产生自己的范围。<br>如果<code>lambda</code>表达式中使用关键字<code>this</code>和<code>super</code>,他的行为与在执行<code>lambda</code>表达式的方法中使用<code>this</code>和<code>super</code>的行为完全相同。</p>
+<p>示例4：</p>
+<pre><code class="java">public class Test &#123;
+    public static void main(String[] argv) &#123;
+        Test test = new Test();
+        test.test();
+    &#125;
+    private void test()&#123;
+        MyFunctionalInterface functionNewClass = new MyFunctionalInterface()&#123;
+            @Override
+            public void function(int x) &#123;
+                System.out.println(&quot;匿名内部类this=======   &quot;+ this);
+            &#125;
+        &#125;;
+        MyFunctionalInterface functionLambda = x -&gt; System.out.println(&quot;lambda表达式中执行this ==========  &quot; + this);
+        System.out.println(&quot;方法中执行this=======   &quot;+ this);
+        functionNewClass.function(1);
+        functionLambda.function(1);
+    &#125;
+&#125;
+
+
+// 执行结果
+方法中执行this=======   cn.bmilk.Test@4bf558aa
+匿名内部类this=======   cn.bmilk.Test$1@2d38eb89
+lambda表达式中执行this ==========  cn.bmilk.Test@4bf558aa
+</code></pre>
+<p>示例3的结果显示，<code>lambda</code>表达式中调用<code>this</code>指针和在方法<code>test()</code>中调用<code>this</code>指代的是同一个对象<code>cn.bmilk.Test@4bf558aa</code>, 而使用匿名内部类<code>this</code>指代的是当前匿名内部类产生的对象<code>cn.bmilk.Test$1@2d38eb89</code>，所以<strong>lambda表达式和匿名内部类是不同的</strong></p>
+<h4 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h4><p><code>lambda</code>表达式可以使用`标记了`<code>final</code>的外层局部变量，这就是说在<code>lambda</code>表达式中不能修改<strong>外层定义的局部变量（不包含全局变量）</strong>，否则会编译错误。</p>
+<p>示例5：引用外层局部变量</p>
+<pre><code class="java">    private void test()&#123;
+        int num = 2;
+        MyFunctionalInterface functionLambda = x -&gt; System.out.println(x * num);
+        functionLambda.function(1);
+    &#125;
+</code></pre>
+<blockquote>
+<p>示例5：<code>test*()</code>中定义了一个变量<code>num</code>，并且在<code>functionLambda</code>中进行了引用。前面提到<code>lambda</code>表达式使用外层局部变量，外层局部变量需要定义为<code>final</code>，但这里并没又定义为<code>final</code>，这是因为<code>num</code>虽然没有被定义为<code>final</code>，但是在<code>num</code>被定义之后并没有再次改变，看起来和一个被<code>final</code>修饰的变量一样，即含有隐性的<code>final</code>定义。<br>当尝试再后面修改<code>num</code>的值，编译器会提示错误信息，如示例6</p>
+</blockquote>
+<p>示例6：</p>
+<pre><code class="java">    private void test()&#123;
+        int num = 2;
+        num = 3;
+        // 编译器提示 引用外层局部变量，外层局部变量必须为final或者等同于final
+        // Variable used in lambda expression should be final or effectively final
+        MyFunctionalInterface functionLambda = x -&gt; System.out.println(x * num);
+        functionLambda.function(1);
+    &#125;
+</code></pre>
+<blockquote>
+<p> 之所以引用外层变量必须是<code>final</code>是因为，局部变量被定义再栈帧中，<code>java</code>访问局部变量的时候实际上是访问他的副本，多个线程对应了多个栈，当<code>lambda</code>表达式执行线程与定义线程不是同一个情况下，如果变量不被定义为<code>final</code>,当一个线程改变了变量值，另一个有可能会读取不到最新值导致出错。</p>
+</blockquote>
+<h2 id="java8-中的函数式接口"><a href="#java8-中的函数式接口" class="headerlink" title="java8+中的函数式接口"></a>java8+中的函数式接口</h2><p><code>java8</code>及更高版本内置了一系列的函数式接口，被放在<code>java.util.function</code>包下，用于支持j函数式编程。另外在之前的版本中存在的<code>java.lang.Runnable</code>、<code>java.util.Comparator</code>也都可以用于函数式编程</p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>

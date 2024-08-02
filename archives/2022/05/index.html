@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>bmilk</title>
+    <title>Archives | bmilk</title>
     <meta name="author" content="Du Jian" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -45,9 +45,9 @@
 
 
 
+<script src="/js/lib/search.js"></script>
 
 
-<script src="/js/lib/home.js"></script>
 
 <link rel="stylesheet" href="/css/main.css" />
 
@@ -157,194 +157,90 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="home-head">
-    <div
-        id="home-background"
-        ref="homeBackground"
-        data-images="/images/background.jpg"
-    ></div>
-    <div id="home-info" @click="homeClick">
-        <span class="loop"></span>
-        <span class="loop"></span>
-        <span class="loop"></span>
-        <span class="loop"></span>
-        <span class="info">
-            <div class="wrap">
-                <h1>bmilk</h1>
-                <h3>励志成为海拉鲁老流氓</h3>
-                <h5></h5>
-            </div>
-        </span>
-    </div>
-</div>
-<div
-    id="home-posts-wrap"
-    ref="homePostsWrap"
-    true
->
-    <div id="home-posts">
-        
-
-<div class="post">
-    <a href="/2022/10/23/java/lambda/">
-        <h2 class="post-title">lambda表达式</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/note/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                note
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar-days"></i>
-            </span>
-            2022/10/23
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
             
-            <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
-<li><a href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3">函数式接口</a></li>
-<li><a href="#lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AE%80%E4%BB%8B">lambda 表达式简介</a><ul>
-<li><a href="#%E7%90%86%E8%A7%A3lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E2%80%94%E2%80%94%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB">理解lambda表达式——匿名内部类</a>
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/java/" style="color: #ffa2c4">java</a>
-        </span>
-        
-    </div>
-    <a href="/2022/10/23/java/lambda/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2022/05/31/java/jvm%E5%8F%82%E6%95%B0/">
-        <h2 class="post-title">常用的JVM参数</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/note/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                note
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar-days"></i>
-            </span>
-            2022/5/31
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
-<li><a href="#%E5%A0%86">堆</a></li>
-<li><a href="#%E6%A0%88">栈</a>
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/jvm/" style="color: #ffa2c4">jvm</a>
-        </span>
-        
-    </div>
-    <a href="/2022/05/31/java/jvm%E5%8F%82%E6%95%B0/" class="go-post">阅读全文</a>
-</div>
-
-
-        <div class="page-current">
+<div id="archives">
     
-    <span class="current">1</span>
+    <input id="search-bar" class="input" placeholder="搜索" v-model="rawSearch" />
     
-    
-    
-    
-</div>
-
-    </div>
-    
-    <div id="home-card">
-        <div id="card-style">
-    <div id="card-div">
-        <div class="avatar">
-            <img src="/images/avatar-link.jpg" alt="avatar" />
-        </div>
-        <div class="name">Du Jian</div>
-        <div class="description">
-            
-            <p>忍一时风平浪静，退一步越想越气</p>
-
-        </div>
+    <div id="timeline-wrap" ref="timeline">
         
-        <div class="icon-links">
-            
-            <span class="icon-link">
-                <a target="_blank" rel="noopener" href="https://github.com/dujian0068">
-                    <i
-                        class="fa-brands fa-github fa-fw"
-                    ></i>
+        <div class="timeline" data-title="常用的jvm参数">
+            <div class="timeline-tail"></div>
+            <div class="timeline-content">
+                <div class="item-time">2022/5/31</div>
+                <a href="/2022/05/31/java/jvm%E5%8F%82%E6%95%B0/">
+                    <h3>常用的JVM参数</h3>
                 </a>
-            </span>
-            
-            <span class="icon-link">
-                <a href="mailto:1426703092@qq.com">
-                    <i
-                        class="fa-solid fa-envelope fa-fw"
-                    ></i>
-                </a>
-            </span>
-            
-        </div>
-        
-        
-        <div class="friend-links">
-            
-            <div class="friend-link">
-                <a target="_blank" rel="noopener" href="https://argvchs.github.io">Argvchs</a>
+                <div class="info">
+                    
+                    <span class="category">
+                        <a href="/categories/note/">
+                            <span class="icon">
+                                <i class="fa-solid fa-bookmark fa-fw"></i>
+                            </span>
+                            note
+                        </a>
+                    </span>
+                    
+                    
+                    <span class="tags">
+                        <span class="icon">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </span>
+                        
+                        
+                        <span class="tag">
+                            
+                            <a href="/tags/jvm/" style="color: #ffa2c4">
+                                jvm
+                            </a>
+                        </span>
+                        
+                    </span>
+                    
+                </div>
             </div>
-            
+        </div>
+        
+        <div class="timeline" data-title="lambda表达式">
+            <div class="timeline-tail"></div>
+            <div class="timeline-content">
+                <div class="item-time">2022/10/23</div>
+                <a href="/2022/10/23/java/lambda/">
+                    <h3>lambda表达式</h3>
+                </a>
+                <div class="info">
+                    
+                    <span class="category">
+                        <a href="/categories/note/">
+                            <span class="icon">
+                                <i class="fa-solid fa-bookmark fa-fw"></i>
+                            </span>
+                            note
+                        </a>
+                    </span>
+                    
+                    
+                    <span class="tags">
+                        <span class="icon">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </span>
+                        
+                        
+                        <span class="tag">
+                            
+                            <a href="/tags/java/" style="color: #00bcd4">
+                                java
+                            </a>
+                        </span>
+                        
+                    </span>
+                    
+                </div>
+            </div>
         </div>
         
     </div>
-</div>
-
-    </div>
-    
 </div>
 
             <footer id="footer">
