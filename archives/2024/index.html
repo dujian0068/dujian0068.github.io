@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>about | bmilk</title>
+    <title>Archives | bmilk</title>
     <meta name="author" content="Du Jian" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -44,6 +44,8 @@
 <script src="/js/lib/preview.js"></script>
 
 
+
+<script src="/js/lib/search.js"></script>
 
 
 
@@ -155,29 +157,135 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div class="article">
-    <div>
-        <h1>about</h1>
-    </div>
-    <div class="info">
-        
-            <span class="date">
-                <span class="icon">
-                    <i class="fa-solid fa-calendar-days"></i>
-                </span>
-                2024/8/15
-            </span>
-        
-
-        
-        
-    </div>
+            
+<div id="archives">
     
-    <div class="content" v-pre>
+    <input id="search-bar" class="input" placeholder="搜索" v-model="rawSearch" />
+    
+    <div id="timeline-wrap" ref="timeline">
+        
+        <div class="timeline" data-title="常用的jvm参数">
+            <div class="timeline-tail"></div>
+            <div class="timeline-content">
+                <div class="item-time">2022/5/31</div>
+                <a href="/2022/05/java/jvm%E5%8F%82%E6%95%B0/">
+                    <h3>常用的JVM参数</h3>
+                </a>
+                <div class="info">
+                    
+                    <span class="category">
+                        <a href="/categories/note/">
+                            <span class="icon">
+                                <i class="fa-solid fa-bookmark fa-fw"></i>
+                            </span>
+                            note
+                        </a>
+                    </span>
+                    
+                    
+                    <span class="tags">
+                        <span class="icon">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </span>
+                        
+                        
+                        <span class="tag">
+                            
+                            <a href="/tags/jvm/" style="color: #03a9f4">
+                                jvm
+                            </a>
+                        </span>
+                        
+                    </span>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline" data-title="lambda表达式">
+            <div class="timeline-tail"></div>
+            <div class="timeline-content">
+                <div class="item-time">2022/10/23</div>
+                <a href="/2022/10/java/lambda/">
+                    <h3>lambda表达式</h3>
+                </a>
+                <div class="info">
+                    
+                    <span class="category">
+                        <a href="/categories/note/">
+                            <span class="icon">
+                                <i class="fa-solid fa-bookmark fa-fw"></i>
+                            </span>
+                            note
+                        </a>
+                    </span>
+                    
+                    
+                    <span class="tags">
+                        <span class="icon">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </span>
+                        
+                        
+                        <span class="tag">
+                            
+                            <a href="/tags/java/" style="color: #00a596">
+                                java
+                            </a>
+                        </span>
+                        
+                    </span>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline" data-title="kafka内存池分析">
+            <div class="timeline-tail"></div>
+            <div class="timeline-content">
+                <div class="item-time">2024/7/1</div>
+                <a href="/2024/07/kafka/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/">
+                    <h3>Kafka内存池分析</h3>
+                </a>
+                <div class="info">
+                    
+                    <span class="category">
+                        <a href="/categories/kafka/">
+                            <span class="icon">
+                                <i class="fa-solid fa-bookmark fa-fw"></i>
+                            </span>
+                            kafka
+                        </a>
+                    </span>
+                    
+                    
+                    <span class="tags">
+                        <span class="icon">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </span>
+                        
+                        
+                        <span class="tag">
+                            
+                            <a href="/tags/kafka/" style="color: #00a596">
+                                kafka
+                            </a>
+                        </span>
+                        
+                        <span class="tag">
+                            
+                            <a href="/tags/mq/" style="color: #00bcd4">
+                                mq
+                            </a>
+                        </span>
+                        
+                    </span>
+                    
+                </div>
+            </div>
+        </div>
         
     </div>
-    
-    
 </div>
 
             <footer id="footer">

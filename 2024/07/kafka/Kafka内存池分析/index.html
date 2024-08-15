@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Kafka内存池分析 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>Kafka内存池分析</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2024/7/1
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/kafka/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                kafka
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/kafka/" style="color: #00a596">
+                    kafka
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/mq/" style="color: #03a9f4">
+                    mq
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0">实现</a><ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E6%97%B6%E6%9C%BA">创建时机</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B">创建过程</a></li>
+<li><a href="#%E5%88%86%E9%85%8DByteBuffer">分配ByteBuffer</a></li>
+<li><a href="#%E5%BD%92%E8%BF%98ByteBuffer">归还ByteBuffer</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Kafka Producer</code>中有这样一个参数<code>buffer.memory</code>, 可能在使用<code>Kafka</code>的过程中没有配置过它，这个参数是<code>Kafka Producer</code>调优非常重要的一个参数。</p>
+<p><code>Producer</code>并不是收到消息就将消息发送到<code>Broker</code>上，而是要等到一定的时间(<code>linger.ms</code>参数控制)或者累计到一定大小(<code>batch.size</code>参数控制)再进行发送，<br>在代码中使用<code>ByteBuffer</code>实现， 如果频繁创建或者销毁<code>buffer</code>会带来很大的性能损失， 因此<code>Kafka</code>使用了池化技术来进行管理，称之为缓存池， 缓存池的大小由参数<code>buffer.memory</code>控制。</p>
+<p><img src="/2024/07/kafka/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/BufferPool%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Kafka缓存池示意图"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h4 id="创建时机"><a href="#创建时机" class="headerlink" title="创建时机"></a>创建时机</h4><p><code>kafkaProducer</code>在初始化的过程中会创建消息记录器<code>RecordAccumulator</code>,在<code>RecordAccumulator</code>构造函数要求传入一个<code>BufferPool</code>对象。具体方法如下</p>
+<pre><code class="Java">// KafkaProducer构造函数中会创建消息累加器
+ this.accumulator = new RecordAccumulator(logContext,
+                    batchSize,
+                    this.compressionType,
+                    lingerMs(config),
+                    retryBackoffMs,
+                    retryBackoffMaxMs,
+                    deliveryTimeoutMs,
+                    partitionerConfig,
+                    metrics,
+                    PRODUCER_METRIC_GROUP_NAME,
+                    time,
+                    apiVersions,
+                    transactionManager,
+                    new BufferPool(this.totalMemorySize, batchSize, metrics, time, PRODUCER_METRIC_GROUP_NAME));
+</code></pre>
+<h4 id="创建过程"><a href="#创建过程" class="headerlink" title="创建过程"></a>创建过程</h4><p><code>BufferPool</code>有四个核心参数:</p>
+<ul>
+<li><code>totalMemory</code>: <code>BufferPool</code>的总大小，受参数<code>buffer.memory</code>控制， 默认大小<code>32M</code></li>
+<li><code>poolableSize</code>: <code>KafkaProducer</code>发送时默认的批次大小，也是<code>free</code>属性中每个<code>ByteBuffer</code>的大小，受参数<code>batch.size</code>控制， 默认大小<code>16K</code>，只有大小等于这个值的<code>ByteBuffer</code>才会被重复利用，因此 应当尽量将这个值设置的大于消息大小</li>
+<li><code>free</code>: 每个大小等于<code>poolableSize</code>的<code>ByteBuffer</code>对象在使用结束后会放到一个队列中，等待下次重复使用，避免不断创建、销毁对象</li>
+<li><code>nonPooledAvailableMemory</code>: 剩余可分配的内存大小。初始时大小同<code>totalMemory</code>，随着<code>ByteBuffer</code>分配而不断减少， 也会因为大小<code>poolableSize</code>的<code>ByteBuffer</code>销毁而增加</li>
+</ul>
+<pre><code class="Java">
+public class BufferPool &#123;
+    // bufferPool总大小
+    private final long totalMemory;
+    // 控制并发
+    private final ReentrantLock lock;
+    // 单个批次大小
+    private final int poolableSize;
+    // bufferPool按照批次大小分配内存的空闲的buffer队列
+    private final Deque&lt;ByteBuffer&gt; free;
+    // 等待buffer的线程队列
+    private final Deque&lt;Condition&gt; waiters;
+    // BufferPool可以分配的空闲内存大小，
+    private long nonPooledAvailableMemory;
+    // BufferPool是否关闭标志位
+    private boolean closed;
+    
+    /**
+     * Create a new buffer pool
+     *
+     * @param memory The maximum amount of memory that this buffer pool can allocate
+     * @param poolableSize The buffer size to cache in the free list rather than deallocating
+     * @param metrics instance of Metrics
+     * @param time time instance
+     * @param metricGrpName logical group name for metrics
+     */
+    public BufferPool(long memory, int poolableSize, Metrics metrics, Time time, String metricGrpName) &#123;
+        this.poolableSize = poolableSize;
+        this.lock = new ReentrantLock();
+        this.free = new ArrayDeque&lt;&gt;();
+        this.waiters = new ArrayDeque&lt;&gt;();
+        this.totalMemory = memory;
+        this.nonPooledAvailableMemory = memory;
+        ...省略部分监控及时间相关代码...
+        this.closed = false;
+    &#125;
+&#125;
+</code></pre>
+<h4 id="分配ByteBuffer"><a href="#分配ByteBuffer" class="headerlink" title="分配ByteBuffer"></a>分配ByteBuffer</h4><p>从内存池分配<code>ByteBuffer</code>可以归结为两种情况</p>
+<ul>
+<li>期望大小等于默认大小，如果有空闲队列中有值，则直接从空闲队列分配，否则扣减剩余可分配的内存并进行分配，如果剩余可分配内存不足，则阻塞等待</li>
+<li>期望值大于默认大小，如果可分配内存大小大于期望大小则直接分配，否则释放空闲队列直到可分配的内存大小大于期望大小再进行分配</li>
+<li>期望值小于默认大小：  不可能</li>
+</ul>
+<p>流程图如下：<br><img src="/2024/07/kafka/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/BufferPool%E5%88%86%E9%85%8D%E6%B5%81%E7%A8%8B.png" alt="BufferPool分配ByteBuffer流程"></p>
+<p>详细代码如下：</p>
+<pre><code class="Java">/**
+     * Allocate a buffer of the given size. This method blocks if there is not enough memory and the buffer pool
+     * is configured with blocking mode.
+     *
+     * @param size The buffer size to allocate in bytes 期望大小
+     * @param maxTimeToBlockMs The maximum time in milliseconds to block for buffer memory to be available 阻塞时间
+     * @return The buffer
+     * @throws InterruptedException If the thread is interrupted while blocked
+     * @throws IllegalArgumentException if size is larger than the total memory controlled by the pool (and hence we would block
+     *         forever)
+     */
+    public ByteBuffer allocate(int size, long maxTimeToBlockMs) throws InterruptedException &#123;
+        if (size &gt; this.totalMemory)
+            throw new IllegalArgumentException(&quot;Attempt to allocate &quot; + size
+                                               + &quot; bytes, but there is a hard limit of &quot;
+                                               + this.totalMemory
+                                               + &quot; on memory allocations.&quot;);
+
+        ByteBuffer buffer = null;
+        this.lock.lock();
+        if (this.closed) &#123;
+            this.lock.unlock();
+            throw new KafkaException(&quot;Producer closed while allocating memory&quot;);
+        &#125;
+
+        try &#123;
+            // 如果期望大小等于默认批次大小并且空闲队列中有对象，则直接从空闲队列获取ByteBuffer
+            if (size == poolableSize &amp;&amp; !this.free.isEmpty())
+                return this.free.pollFirst();
+            
+            int freeListSize = freeSize() * this.poolableSize;
+            //  如果可分配内存 + 空闲队列内存 &gt; 期望大小，则按照需要释放一定空闲队列，并进行分配
+            if (this.nonPooledAvailableMemory + freeListSize &gt;= size) &#123;
+                // 释放空闲队列中的对象
+                freeUp(size);
+                this.nonPooledAvailableMemory -= size;
+            &#125; else &#123;
+                //
+                // 空闲内存不足，必须阻塞
+                int accumulated = 0; // 可以分配到的内存大小
+                Condition moreMemory = this.lock.newCondition();
+                try &#123;
+                    long remainingTimeToBlockNs = TimeUnit.MILLISECONDS.toNanos(maxTimeToBlockMs);
+                    this.waiters.addLast(moreMemory);
+                    // loop over and over until we have a buffer or have reserved
+                    // enough memory to allocate one
+                    while (accumulated &lt; size) &#123; // 可以分配到的内存大小小于期望值
+                        long startWaitNs = time.nanoseconds();
+                        long timeNs;
+                        boolean waitingTimeElapsed;
+                        try &#123;
+                            // 阻塞等待
+                            waitingTimeElapsed = !moreMemory.await(remainingTimeToBlockNs, TimeUnit.NANOSECONDS);
+                        &#125; finally &#123;
+                            long endWaitNs = time.nanoseconds();
+                            timeNs = Math.max(0L, endWaitNs - startWaitNs);
+                            recordWaitTime(timeNs);
+                        &#125;
+
+                        if (this.closed)
+                            throw new KafkaException(&quot;Producer closed while allocating memory&quot;);
+
+                        if (waitingTimeElapsed) &#123;
+                            this.metrics.sensor(&quot;buffer-exhausted-records&quot;).record();
+                            throw new BufferExhaustedException(&quot;Failed to allocate &quot; + size + &quot; bytes within the configured max blocking time &quot;
+                                + maxTimeToBlockMs + &quot; ms. Total memory: &quot; + totalMemory() + &quot; bytes. Available memory: &quot; + availableMemory()
+                                + &quot; bytes. Poolable size: &quot; + poolableSize() + &quot; bytes&quot;);
+                        &#125;
+
+                        remainingTimeToBlockNs -= timeNs;
+                        
+                        // 期望大小等于默认批次带下并且空闲池有空闲ByteBuffer直接分配
+                        if (accumulated == 0 &amp;&amp; size == this.poolableSize &amp;&amp; !this.free.isEmpty()) &#123;
+                            // just grab a buffer from the free list
+                            buffer = this.free.pollFirst();
+                            accumulated = size;
+                        &#125; else &#123;
+                            // 否则计算需要释放的内存大小并从空闲队列中释放
+                            freeUp(size - accumulated);
+                            int got = (int) Math.min(size - accumulated, this.nonPooledAvailableMemory);
+                            this.nonPooledAvailableMemory -= got;
+                            accumulated += got;
+                        &#125;
+                    &#125;
+                    // Don&#39;t reclaim memory on throwable since nothing was thrown
+                    accumulated = 0;
+                &#125; finally &#123;
+                    // When this loop was not able to successfully terminate don&#39;t loose available memory
+                    // 如果上述循环获得了足够的内存，则accumulated=0， 代表有足够的内存可以分配
+                    // 如果上述循环没有获得足够的内存等待超时，则应该将空闲的内存返还
+                    this.nonPooledAvailableMemory += accumulated;
+                    this.waiters.remove(moreMemory);
+                &#125;
+            &#125;
+        &#125; finally &#123;
+            // 多线程情况下唤醒操作
+            try &#123;
+                if (!(this.nonPooledAvailableMemory == 0 &amp;&amp; this.free.isEmpty()) &amp;&amp; !this.waiters.isEmpty())
+                    this.waiters.peekFirst().signal();
+            &#125; finally &#123;
+                // Another finally... otherwise find bugs complains
+                lock.unlock();
+            &#125;
+        &#125;
+
+        if (buffer == null)
+            // 到这里一定有足够的内存可以分配
+            return safeAllocateByteBuffer(size);
+        else
+            return buffer;
+    &#125;
+</code></pre>
+<h4 id="归还ByteBuffer"><a href="#归还ByteBuffer" class="headerlink" title="归还ByteBuffer"></a>归还ByteBuffer</h4><p>相比于分配将使用完的<code>ByteBuffer</code>归还流程就要简单的多，如果<code>ByteBuffer</code>大小等于默认批次大小，就加入空闲队列，否则执行<code>ByteBuffer</code>对象释放销毁</p>
+<pre><code class="Java">    /**
+     * Return buffers to the pool. If they are of the poolable size add them to the free list, otherwise just mark the
+     * memory as free.
+     *
+     * @param buffer The buffer to return
+     * @param size The size of the buffer to mark as deallocated, note that this may be smaller than buffer.capacity
+     *             since the buffer may re-allocate itself during in-place compression
+     */
+    public void deallocate(ByteBuffer buffer, int size) &#123;
+        lock.lock();
+        try &#123;
+            // ByteBuffer大小等于默认批次大小，清空ByteBuffer 加入空闲队列
+            if (size == this.poolableSize &amp;&amp; size == buffer.capacity()) &#123;
+                buffer.clear();
+                this.free.add(buffer);
+            &#125; else &#123;
+                // 交给JVM垃圾回收释放对象并调高对应的可分配空间大小
+                this.nonPooledAvailableMemory += size;
+            &#125;
+            // 唤醒等待分配ByteBuffer的线程
+            Condition moreMem = this.waiters.peekFirst();
+            if (moreMem != null)
+                moreMem.signal();
+        &#125; finally &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在<code>Kafka Producer</code>从<code>BufferPool</code>分配<code>ByteBuffer</code>的过程中有一个很关键的指标就是期望大小是否大于默认批次大小，如果期望大小比默认批次大小大会导致<code>ByteBuffer</code>无法复用，必须不断地销毁、重建，<br>会导致整体性能下降，因此配置<code>batch.size</code>的时候一定要评估发送的消息大小，应该绝大部分消息都要小于这个批次，最好这<code>batch.size</code>的大小是消息大小（需要包含<code>kafka</code>的一些头信息大小）的整数倍，因为批次<br>当一个批次剩余空间不足以存放一条消息时也会新建一个批次，当然我们似乎不太可能找到这个大小，但我们可以使绝大部分消息都要小于这个批次。</p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>
