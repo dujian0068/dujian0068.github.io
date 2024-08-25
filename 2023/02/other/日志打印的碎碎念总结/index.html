@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>日志打印的碎碎念总结 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>日志打印的碎碎念总结</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2023/2/17
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/Log/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Log
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Log/" style="color: #ffa2c4">
+                    Log
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%97%A5%E5%BF%97/" style="color: #00bcd4">
+                    日志
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#1%E3%80%81%E6%9C%89%E6%84%8F%E4%B9%89%E7%9A%84%E6%97%A5%E5%BF%97%E4%BF%A1%E6%81%AF%E2%80%94%E2%80%94%E4%B8%BA%E6%97%A5%E5%BF%97%E6%B6%88%E6%81%AF%E6%B7%BB%E5%8A%A0%E4%B8%8A%E4%B8%8B%E6%96%87">1、有意义的日志信息——为日志消息添加上下文</a></li>
+<li><a href="#2%E3%80%81%E5%B0%BD%E5%8F%AF%E8%83%BD%E4%BD%BF%E7%94%A8%E8%8B%B1%E6%96%87%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97">2、尽可能使用英文记录日志</a></li>
+<li><a href="#3%E3%80%81%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E8%AE%B0%E5%BD%95%E5%B7%A5%E5%85%B7">3、选择合适的记录工具</a></li>
+<li><a href="#4%E3%80%81%E4%B8%8D%E8%A6%81%E5%86%99%E7%9A%84%E5%A4%AA%E5%A4%9A%E4%BD%86%E6%9B%B4%E4%B8%8D%E8%83%BD%E5%A4%AA%E5%B0%91">4、不要写的太多但更不能太少</a></li>
+<li><a href="#5%E3%80%81%E5%9C%A8%E5%90%88%E9%80%82%E7%9A%84%E5%9C%B0%E6%96%B9%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97">5、在合适的地方记录日志</a></li>
+<li><a href="#6%E3%80%81%E5%9C%A8%E5%90%88%E9%80%82%E7%9A%84%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8%E5%90%88%E9%80%82%E7%9A%84%E6%97%A5%E5%BF%97%E7%AD%89%E7%BA%A7">6、在合适的环境使用合适的日志等级</a></li>
+<li><a href="#7%E3%80%81%E5%9C%A8%E6%8F%90%E4%BA%A4%E4%B9%8B%E5%89%8D%E5%88%A0%E9%99%A4%E4%BB%85%E4%BB%85%E6%8F%90%E4%BE%9B%E5%B8%AE%E5%8A%A9%E5%8A%9F%E8%83%BD%E7%9A%84%E6%97%A5%E5%BF%97%E4%BB%A3%E7%A0%81">7、在提交之前删除仅仅提供帮助功能的日志代码</a></li>
+<li><a href="#8%E3%80%81%E4%BA%86%E8%A7%A3%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6%E7%9A%84%E6%A0%B8%E5%BF%83%E9%80%89%E5%8F%96%E5%90%88%E9%80%82%E7%9A%84%E6%97%A5%E5%BF%97%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9E%84%E9%80%A0%E6%96%B9%E5%BC%8F">8、了解日志框架的核心选取合适的日志字符串构造方式</a></li>
+<li><a href="#9%E3%80%81%E7%A8%8B%E5%BA%8F%E5%8F%AF%E4%BB%A5%E7%90%86%E8%A7%A3%E7%9A%84%E6%97%A5%E5%BF%97">9、程序可以理解的日志</a></li>
+<li><a href="#10%E3%80%81%E7%AC%A6%E5%90%88%E6%B3%95%E5%BE%8B%E6%B3%95%E8%A7%84">10、符合法律法规</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3">参考文档</a></li>
+</ul>
+<p>众所周知，日子作为最强的甩锅神器，合理合适的记录日志就是一个问题。今天我想总结下我对日志的看法</p>
+<h2 id="1、有意义的日志信息——为日志消息添加上下文"><a href="#1、有意义的日志信息——为日志消息添加上下文" class="headerlink" title="1、有意义的日志信息——为日志消息添加上下文"></a>1、有意义的日志信息——为日志消息添加上下文</h2><p><strong>写这一行日志的时候思考下，生产出现异常的时候，这一行日志是否能提供有效的帮助去解决问题</strong></p>
+<p>这是最重要，也是最难做到的一个总结。在处理问题的时候，尤其是难以复现的问题，能协助处理问题的就只有日志文件，开发人员必须能从中了解到当时发生了什么！</p>
+<p>当开发人员看到日志时，通常会根据日志推断问题发生时的上下文消息，不幸的时候日志本身并没有这个上下文，因此需要开发者手动将这些信息补充到日志中，如果不能也可加入操作的目的或者结果，便于理解。</p>
+<p>比如<code>ERROR: save error - SQL Excepetion</code>这条日志，当你排查问题的时候价值几乎为0，除了知道时<code>SQL</code>执行出错外，没有任何信息。更好，更有用的信息应该是这样<code>ERROR: save error, data com.xxx.Cat(name = name, age=1) - SQL Excepetion</code>,其中解释了<code>Cat</code>是一个类，并且记录了对应示例的<strong>相关</strong>内容，注意是相关内容，而不是全部，无用的信息应该被去除，避免一些无用信息混淆日志文件。</p>
+<h2 id="2、尽可能使用英文记录日志"><a href="#2、尽可能使用英文记录日志" class="headerlink" title="2、尽可能使用英文记录日志"></a>2、尽可能使用英文记录日志</h2><p>英文可能没有中文读起来方便，但是英文依然是记录日志最好的语言，没有之一，原因如下：</p>
+<ul>
+<li>无法预知日志消息的内容以及他将被归档在何地，以何种方式被打开。英文将以<code>ASCII</code>字符被记录，如果日志消息使用特殊字符集乃至<code>UTF-8</code>，当被阅读者打开的时候都有可能无法正确呈现。并且还可能存在用户的输入采用不同的字符集或者编码的问题</li>
+<li>国际化。如果不确定程序的使用者是谁，那么英文会是最好的选择。</li>
+</ul>
+<h2 id="3、选择合适的记录工具"><a href="#3、选择合适的记录工具" class="headerlink" title="3、选择合适的记录工具"></a>3、选择合适的记录工具</h2><p>犹记得在我刚开始写代码的时候，为了记录日志信息使用了<code>System.out.println()</code>，尽管这个解决了问题，但是这是一个非常愚蠢的方式。缺点数不胜数。<br>尽管<code>java</code>生态种提供了诸如<code>Log4j</code>、<code>JCL</code>、<code>slf4j</code> 和 <code>logback</code>等诸多第三方日志框架，但请尽量使用<code>slf4j</code>的门面模式来记录，有利于维护和各个类的日志处理方式统一，并且可以在保证不修改代码的情况下，很方便的实现底层日志框架的更换。</p>
+<h2 id="4、不要写的太多但更不能太少"><a href="#4、不要写的太多但更不能太少" class="headerlink" title="4、不要写的太多但更不能太少"></a>4、不要写的太多但更不能太少</h2><p>这句话听起来似乎很矛盾，但我们确实应该平衡日志的数量。试想在凌晨3点，你要在漫天日志中寻找问题的根源，如果被大量日志混乱你的思路这并不是一件好事。但如果日志太少，找不到问题根源，这更是一个问题。</p>
+<p>到底多少合适，没有一个准确的数字，有一个解决思路是，前期可以多打日志，功能上线后，对日志进行分析，并根据问题的减少而减少日志，或者补上缺失的日志</p>
+<h2 id="5、在合适的地方记录日志"><a href="#5、在合适的地方记录日志" class="headerlink" title="5、在合适的地方记录日志"></a>5、在合适的地方记录日志</h2><p>看这个标题，如果问我什么是合适的地方，我也不知道，但是如果从日志的用出来看，那将会有一些答案</p>
+<ul>
+<li>远程调用或者第三方<code>API</code>开始与结束：众所周知，<strong>日志可以作为一个甩锅利器</strong>，当对方告诉你他做了什么而你认为没有或者不对的时候,日志就是最有力的证据</li>
+<li>系统<code>API</code>开始与结束：这块就是自己系统的大门，谁来都得留下影子，别人说没给的时候，这里同样也是证据。另外在日志排错、<strong>性能分析</strong>、<strong>链路追踪</strong>方面很有帮助</li>
+<li>异常块：所有捕获的异常军应该记录异常内容</li>
+<li>应用的启动、停止日志</li>
+<li>其他日志：可以根据业务需要，记录相应的日志，比如某些<code>SQL</code>查询的结果</li>
+</ul>
+<h2 id="6、在合适的环境使用合适的日志等级"><a href="#6、在合适的环境使用合适的日志等级" class="headerlink" title="6、在合适的环境使用合适的日志等级"></a>6、在合适的环境使用合适的日志等级</h2><p><code>java</code>生态种可以使用的日志框架都有日志级别的概念，常见的日志级别如下：</p>
+<ul>
+<li><code>DEBUG：</code>主要输出调试性质的内容，该级别的日志主要用于在开发、测试阶段输出，该级别的日志应尽可能的详细，比如各类调试信息、输入输出信息等等。</li>
+<li><code>INFO：</code>业务系统记录日志的关键信息。开发可以将初始化系统配置，业务状态变化信息、流程核心记录到这个几倍种，方便运维工作及错误回溯时上下问场景复现</li>
+<li><code>WARN：</code>主要输出警告性质的内容，该内容是可以预知，并且有规划的，比如乐观锁更新失败、方法空参等等</li>
+<li><code>ERROR：</code>主要针对一些不可预知的、对应用影响打的错误、异常信息。比如<code>catch</code>代码块抓取的数据通信异常、文件异常。在输出<code>ERROR</code>级别的日志时，尽量的多输入方法参数，方法过程中产生的对象、错误、异常对象数据。</li>
+</ul>
+<p><strong>不同的环境应当使用不同日志级别，这样可以过滤掉级别过低的消息我通常使用的配置如下：</strong><br>-生产：自己编写的代码的<code>Info</code>级别和第三方库的<code>warn</code>级别<br>-开发、测试：自己编写的代码的<code>debug</code>级别和第三方库的<code>warn</code>级别</p>
+<h2 id="7、在提交之前删除仅仅提供帮助功能的日志代码"><a href="#7、在提交之前删除仅仅提供帮助功能的日志代码" class="headerlink" title="7、在提交之前删除仅仅提供帮助功能的日志代码"></a>7、在提交之前删除仅仅提供帮助功能的日志代码</h2><p>在开发、测试期间，通常会打印很多的日志来记录应用过程中发生了什么，比如：</p>
+<pre><code class="java">public void method(String str)&#123;
+    log.info(&quot;method start, str&#123;&#125;&quot;, str);
+    if(&quot;NO&quot;.equals(str))&#123;
+        log.debug(&quot;the param is no&quot;);
+        // do other
+    &#125;
+&#125;
+</code></pre>
+<p>这些日志的主要目的是通过显示的调用及内部的方法数值来跟踪程序的行为，但是当这些代码发布后，<code>log.debug(&quot;the param is no&quot;);</code>将没有什么意义。所以在开发完成后，在代码合并到发版分支之前应当删除不必要的日志信息</p>
+<h2 id="8、了解日志框架的核心选取合适的日志字符串构造方式"><a href="#8、了解日志框架的核心选取合适的日志字符串构造方式" class="headerlink" title="8、了解日志框架的核心选取合适的日志字符串构造方式"></a>8、了解日志框架的核心选取合适的日志字符串构造方式</h2><p>选取不合适日志字符串构造方式可能会导致额外的开销，比如下面的两行代码</p>
+<pre><code class="java">log.debug(String.formt(&quot;name=%s, age=%s&quot;, &quot;test&quot;, 1));
+log.debug(&quot;name=&#123;&#125;, age=&#123;&#125;&quot;, &quot;test&quot;, 1);
+</code></pre>
+<p>这两行代码的最后日志输出都是：</p>
+<pre><code>name=test, age=1
+</code></pre>
+<p>但是当日志输出级别为<code>INFO</code>的时候却有巨大的时效差距。</p>
+<ul>
+<li>当使用第一种方式构造日志对象时，会先生成字符串<code>name=test, age=1</code>， 并传参给<code>log.debug()</code>函数，之后判断出日志输出级别为<code>INFO</code>，不再输出日志。</li>
+<li>使用第二种方式的时候，会先判断是<code>INFO</code>级别的日志输出，从而减少了构造字符串的时间。</li>
+</ul>
+<p>关于<code>SLF4J</code>的构造方式可以参考<a target="_blank" rel="noopener" href="https://www.slf4j.org/faq.html#logging_performance">https://www.slf4j.org/faq.html#logging_performance</a></p>
+<h2 id="9、程序可以理解的日志"><a href="#9、程序可以理解的日志" class="headerlink" title="9、程序可以理解的日志"></a>9、程序可以理解的日志</h2><p>我对日志的要求第一要义是解决生产问题，所以一定是要人能读懂的日志。但有时对于大量的日志，我们需要自动化脚本进行批处理，那么我们就需要程序能够理解。</p>
+<p>假设有这样一行语句</p>
+<pre><code class="java">log.info(&quot;User &#123;&#125; plays &#123;&#125; in game &#123;&#125;&quot;, userId, card, gameId);
+</code></pre>
+<p>他将产生这样的文本</p>
+<pre><code class="java">2013-01-12 17:49:37,656 [T1] INFO  c.d.g.UserRequest  User 1334563 plays 4 of spades in game 23425656
+</code></pre>
+<p>如果想要进行解析，正则表达式可能会是这样(没有验证)<code>/User (d+) plays (.+?) in game (d+)$/</code><br>这样很容易出错，玩意用户就叫<code>play</code>怎么办呢？</p>
+<p>我们可以将语句改成这样</p>
+<pre><code class="java">log.info(&quot;User [&#123;&#125;] plays [&#123;&#125;] in game [&#123;&#125;]&quot;, userId, card, gameId);
+</code></pre>
+<p>所有的参数值都放在<code>[]</code>之间，这样就能更好的让程序分析代码</p>
+<h2 id="10、符合法律法规"><a href="#10、符合法律法规" class="headerlink" title="10、符合法律法规"></a>10、符合法律法规</h2><p>基于各国、各行业的法律法规，不要打印用户的敏感信息，例如：银行卡号、身份证号、手机号</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p>[1] <a target="_blank" rel="noopener" href="https://www.javacodegeeks.com/2015/12/5-java-logging-rules.html">The 5 Java logging rules</a><br>[2] <a target="_blank" rel="noopener" href="https://www.dataset.com/blog/the-10-commandments-of-logging/">Logging Best Practices: The 13 You Should Know</a><br>[3] <a target="_blank" rel="noopener" href="https://www.slf4j.org/faq.html#logging_performance">logging_performance</a><br>[4] <a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/712916">日志粒度总结</a></p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>
