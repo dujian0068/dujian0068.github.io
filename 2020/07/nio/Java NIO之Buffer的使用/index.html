@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Java NIO之Buffer的使用 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>Java NIO之Buffer的使用</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2020/7/2
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/NIO/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                NIO
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Java/" style="color: #ffa2c4">
+                    Java
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/NIO/" style="color: #00a596">
+                    NIO
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/Buffer/" style="color: #ffa2c4">
+                    Buffer
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><code>Buffer</code>简介</li>
+<li><code>Buffer</code>的核心属性</li>
+<li><code>Buffer</code>的创建与使用(<code>ByteBuffer</code>为例)</li>
+<li>总结</li>
+<li>参考资料</li>
+</ul>
+<h2 id="Buffer简介"><a href="#Buffer简介" class="headerlink" title="Buffer简介"></a>Buffer简介</h2><p>缓冲区(<code>Buffer</code>):本质上是一个数组，用于临时保存、写入以及读取数据。在<code>Java NIO</code>中，<br>该内存块包含在<code>NIO Buffer</code>对象当中，<code>NIO Buffer</code>对象还提供了一组接口来访问该内存块。</p>
+<p>根据数据类型的不同，<code>Java</code>为除了<code>boolean</code>类型之外的其余7种基本类型提供了相应类型的缓冲区，<br>分别是<code>ByteBuffer</code>、<code>CharBuffer</code>、<code>ShortBuffer</code>、<code>IntBuffer</code>、<code>LongBuffer</code>、<br><code>FloatBuffer</code>、<code>DoubleBuffer</code>。他们都继承自抽象类<code>Buffer</code>类，他们的管理方式也都几乎一样。<br><code>UML</code>类图如下：<br><img src="/2020/07/nio/Java%20NIO%E4%B9%8BBuffer%E7%9A%84%E4%BD%BF%E7%94%A8/Buffer.png" alt="Buffer类UML类图"></p>
+<h2 id="Buffer的核心属性"><a href="#Buffer的核心属性" class="headerlink" title="Buffer的核心属性"></a>Buffer的核心属性</h2><p><code>BUffer</code>类的部分实现如下：</p>
+<pre><code class="java">public abstract class Buffer &#123;
+    // Invariants: mark &lt;= position &lt;= limit &lt;= capacity
+    private int mark = -1;
+    private int position = 0;
+    private int limit;
+    private int capacity;
+
+    //构造方法
+    Buffer(int mark, int pos, int lim, int cap) &#123;       // package-private
+        if (cap &lt; 0)
+            throw new IllegalArgumentException(&quot;Negative capacity: &quot; + cap);
+        this.capacity = cap;
+        limit(lim);
+        position(pos);
+        if (mark &gt;= 0) &#123;
+            if (mark &gt; pos)
+                throw new IllegalArgumentException(&quot;mark &gt; position: (&quot;
+                                                   + mark + &quot; &gt; &quot; + pos + &quot;)&quot;);
+            this.mark = mark;
+        &#125;
+    &#125;
+    
+    /**
+     * Returns this buffer&#39;s capacity.
+     *
+     * @return  The capacity of this buffer
+     */
+    //返回这个Buffer的容量
+    public final int capacity() &#123;
+        return capacity;
+    &#125;
+
+    /**
+     * Returns this buffer&#39;s position.
+     *
+     * @return  The position of this buffer
+     */
+    //返回这个Buffer中当前的位置(当前操作数)
+    public final int position() &#123;
+        return position;
+    &#125;
+
+    /**
+     * Returns this buffer&#39;s limit.
+     *
+     * @return  The limit of this buffer
+     */
+    //返回当前Buffer中可以被操作的元素的个数
+    public final int limit() &#123;
+        return limit;
+    &#125;
+
+    /**
+     * Sets this buffer&#39;s mark at its position.
+     *
+     * @return  This buffer
+     */
+    //记录当前position的位置
+    public final Buffer mark() &#123;
+        mark = position;
+        return this;
+    &#125;
+    
+    public final Buffer reset() &#123;
+        int m = mark;
+        if (m &lt; 0)
+            throw new InvalidMarkException();
+        position = m;
+        return this;
+    &#125;
+
+&#125;
+</code></pre>
+<p>其中定义了四个<code>Buffer</code>属性，对应的描述如下</p>
+<table>
+<thead>
+<tr>
+<th align="center">属性</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">capacity</td>
+<td align="center">容量；用于描述这个Buffer大小，即创建的数组的长度，一旦声明不可以被改变</td>
+</tr>
+<tr>
+<td align="center">position</td>
+<td align="center">位置，表示当前缓冲区中正在操作的数据的位置，在切换读取时会将其置0</td>
+</tr>
+<tr>
+<td align="center">limit</td>
+<td align="center">界限、限制；表示当前缓冲区中可以操作的数据的大小，默认情况下为Buffer的大小，切换为读取模式后为数组中元素的个数(准确的说时切换之前position的值)</td>
+</tr>
+<tr>
+<td align="center">mark</td>
+<td align="center">标记；用于记录当前position的位置，后续操作过程中可以使用reset()方法将position还原至最后一次mark的位置</td>
+</tr>
+</tbody></table>
+<h2 id="Buffer的创建与使用-ByteBuffer为例"><a href="#Buffer的创建与使用-ByteBuffer为例" class="headerlink" title="Buffer的创建与使用(ByteBuffer为例)"></a>Buffer的创建与使用(ByteBuffer为例)</h2><h4 id="Buffer的创建"><a href="#Buffer的创建" class="headerlink" title="Buffer的创建"></a>Buffer的创建</h4><p>在<code>Java NIO</code>中可以使用对应<code>Buffer</code>类的<code>allocate()</code>或者<code>allocateDirect()</code>静态方法创建。</p>
+<pre><code class="Java">//使用allocate()创建
+ByteBuffer byteBuffer=ByteBuffer.allocate(1024);
+
+//使用allocateDirect()创建
+ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1024);
+</code></pre>
+<p>而<code>Buffer</code>的本质是一个数组，创建时需要指定数组的大小</p>
+<h4 id="Buffer的使用"><a href="#Buffer的使用" class="headerlink" title="Buffer的使用"></a>Buffer的使用</h4><p><code>Buffer</code>的使用一般分为四个步骤</p>
+<ol>
+<li>向<code>Buffer</code>中写入数据</li>
+<li>将<code>Buffer</code>切换为读取模式</li>
+<li>读取<code>Buffer</code></li>
+<li>将<code>Buffer</code>清空，供后续写入使用</li>
+</ol>
+<p><strong>1. 写入数据</strong></p>
+<pre><code class="Java">//使用put()方法向Buffer中写入数据
+byteBuffer.put(&quot;bmilk&quot;.getBytes());
+
+//使用Channel#read()向Buffer中写入数据
+channel.read(byteBuffer);
+</code></pre>
+<p><code>put()</code>方法的核心过程</p>
+<pre><code class="Java">    public final ByteBuffer put(byte[] src) &#123;
+        return put(src, 0, src.length);
+    &#125;
+
+    //真实的写入方法
+    public ByteBuffer put(byte[] src, int offset, int length) &#123;
+        //检查边界溢出
+        checkBounds(offset, length, src.length);
+        if (length &gt; remaining())
+            throw new BufferOverflowException();
+        int end = offset + length;
+        //循环将源数据写入缓冲区的数组
+        //这里不展开，因为缓冲区的分类问题，分类不同缓冲区对应的内存位置不同
+        for (int i = offset; i &lt; end; i++)
+            this.put(src[i]);
+        return this;
+    &#125;
+</code></pre>
+<p><strong>2. 将<code>Buffer</code>切换为读取模式</strong></p>
+<p>可以通过调用<code>flip()</code>方法将<code>Buffer</code>从写模式切换到读模式。</p>
+<pre><code class="Java">byteBuffer.flip();
+</code></pre>
+<p>调用<code>flip()</code>方法会将<code>position</code>设回0，并将<code>limit</code>设置成之前<code>position</code>的值。<br>即，现在使用<code>position</code>标记读的位置，<code>limit</code>表示之前写进了多少个<code>byte</code>,也就是现在<br>能读取多少个<code>byte</code>等。</p>
+<p><code>flip()</code>方法源码</p>
+<pre><code class="Java">    public final Buffer flip() &#123;
+        limit = position;
+        position = 0;
+        mark = -1;
+        return this;
+    &#125;
+</code></pre>
+<p><strong>3. 读取<code>Buffer</code></strong><br>读取<code>Buffer</code>有两种方式：</p>
+<ol>
+<li>从<code>Buffer</code>种读取数据到<code>Channel</code></li>
+<li>使用<code>get()</code>方法从<code>Buffer</code>种读取数据</li>
+</ol>
+<pre><code class="Java">//从Buffe中将数据写入通道
+inChannel.write(byteBuffer);
+
+//使用get()方法从BUffer中读取数据
+byte[] bytes=new byte[byteBuffer.limit()];
+byteBuffer.get(bytes);
+</code></pre>
+<p><strong>4. 将<code>Buffer</code>清空，供后续写入使用</strong><br>使用<code>clear()</code>清空缓冲区，清空缓冲区只是使各个指针恢复初始位置，<br>更具体的说是<code>position</code>设置为0，<code>limit</code>设置为容量的初始大小。<br>并不会真实清空其中数据，但是可以通过后续的写覆盖之前的数据</p>
+<pre><code class="Java">byteBuffer.clear();
+</code></pre>
+<p><code>clear()</code>方法源码</p>
+<pre><code class="Java">    //清空Buffer
+    //仅仅将指针归为，并不会删除数据，可以通过get(int index)方法获取其中的数据
+    //获取到的数据可能是初始值，因为Buffer中可能存在之前并未使用的空间。
+    public final Buffer clear() &#123;
+        position = 0;
+        limit = capacity;
+        mark = -1;
+        return this;
+    &#125;
+</code></pre>
+<h4 id="其他的一些方法"><a href="#其他的一些方法" class="headerlink" title="其他的一些方法"></a>其他的一些方法</h4><ol>
+<li>使用<code>rewind()</code>从<code>Buffer</code>重复读取数据</li>
+</ol>
+<pre><code class="Java">//使用`rewind()`从`Buffer`重复读取数据
+//Buffer.rewind()将position设回0，所以你可以重读Buffer中的所有数据。
+//limit保持不变，仍然表示能从Buffer中读取多少个元素（byte、char等）。
+Buffer rewind = byteBuffer.rewind();
+</code></pre>
+<ol start="2">
+<li><code>compact()</code>方法</li>
+</ol>
+<p><code>clear()</code>会使使各个指针恢复初始位置，但是实际中可能存在部分数据还没有被使用，而后续需要使用。<br>又必须清理一部分<code>Buffer</code>的空间，<code>compact()</code>方法会将所有未读数据拷贝到Buffer的起始处，<br>然后将<code>position</code>指针设置到最后一个未读元素的后面，现在<code>Buffer</code>可以进行写数据，<br>但是不会覆盖前面的未读的数据。</p>
+<ol start="3">
+<li><code>mark()</code>方法与<code>reset()</code>方法</li>
+</ol>
+<p>通过调用Buffer.mark()方法，可以标记Buffer中的当前的position。之后可以通过调用Buffer.reset()方法恢复到这个position。</p>
+<pre><code>//使用mark标记当前的position位置
+byteBUffer.mark()
+//使用reset方法使position指针返回这个位置
+byteBuffer.reset()
+</code></pre>
+<p>4.<code>equals()</code>方法与<code>compareTo()</code>方法</p>
+<p>当需要比较两个<code>Buffer</code>时可以使用<code>equals()</code>方法与<code>compareTo()</code>方法。</p>
+<p><code>equals()</code>方法判断两个方式是否相等，当满足下列条件时，表示两个<code>Buffer</code>相等</p>
+<blockquote>
+<ul>
+<li>有相同的类型（<code>byte</code>、<code>char</code>、<code>int</code>等）</li>
+<li><code>Buffer</code>中剩余的<code>byte</code>、<code>char</code>等的个数相等。</li>
+<li><strong><font color="#ff0000"><code>Buffer</code>中所有剩余的<code>byte</code>、<code>char</code>等都相同</font></strong></li>
+</ul>
+</blockquote>
+<p><code>compareTo()</code>方法比较两个两个<code>Buffer</code>的大小，仅比较剩余元素(<code>byte</code>、<code>char</code>等),如果满足下列条件，则认为一个<code>Buffer</code>“小于”另一个<code>Buffer</code>：</p>
+<blockquote>
+<ul>
+<li>第一个不相等的元素小于另一个Buffer中对应的元素</li>
+<li>所有元素都相等，但第一个Buffer比另一个先耗尽(第一个Buffer的元素个数比另一个少)。</li>
+</ul>
+</blockquote>
+<h2 id="直接缓冲区与非直接缓冲区"><a href="#直接缓冲区与非直接缓冲区" class="headerlink" title="直接缓冲区与非直接缓冲区"></a>直接缓冲区与非直接缓冲区</h2><ul>
+<li>非直接缓冲区：通过<code>allocate()</code>方法分配缓冲区，将缓冲区建立在JVM内存中</li>
+<li>直接缓冲区：通过<code>allocateDirect()</code>方法分配直接缓冲区，将缓冲区建立在物理内存中，可以在某些情况下提高效率</li>
+</ul>
+<h4 id="非直接缓冲区"><a href="#非直接缓冲区" class="headerlink" title="非直接缓冲区"></a>非直接缓冲区</h4><ul>
+<li>非直接缓冲区数据流向图<br><img src="/2020/07/nio/Java%20NIO%E4%B9%8BBuffer%E7%9A%84%E4%BD%BF%E7%94%A8/%E9%9D%9E%E7%9B%B4%E6%8E%A5%E7%BC%93%E5%86%B2%E5%8C%BA.png" alt="非直接缓冲区数据流向图"></li>
+</ul>
+<h4 id="直接缓冲区"><a href="#直接缓冲区" class="headerlink" title="直接缓冲区"></a>直接缓冲区</h4><ul>
+<li>直接缓冲区数据流向图<br><img src="/2020/07/nio/Java%20NIO%E4%B9%8BBuffer%E7%9A%84%E4%BD%BF%E7%94%A8/%E7%9B%B4%E6%8E%A5%E7%BC%93%E5%86%B2%E5%8C%BA.png" alt="直接缓冲区数据流向图"></li>
+</ul>
+<p>直接缓冲区（物理内存映射文件）：相比非直接缓冲区省略了<code>copy</code>的过程，所以说直接缓区可以一定程度上提高效率</p>
+<p>弊端：</p>
+<ul>
+<li>开辟空间时资源消耗大</li>
+<li>不安全，<code>java</code>程序将数据写入物理内存映射文件中，之后数据将不受<code>Java</code>程序控制，<br>什么时候写入硬盘无法控制（由操作系统控制），当垃圾回收机制释放引用后才能断开与之的连接</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>缓冲区要么是直接的，要么是非直接的如果为直接字节缓冲区，则<code>java</code>虚拟机会见最大努力直接在此缓冲区上执行本机<code>I/O</code>。<br>也就是说，每次调用基础操作系统的<code>I/O</code>之前或之后，虚拟机都回尽量避免将缓冲区的内容复制到中间缓冲区或者从中间缓冲区中复制内容。</li>
+<li>直接字节缓冲区可以通过调用此类的<code>allocateDirect()</code>工厂方法来创建，<br>此方法返回的缓冲区进行分配和取消分配所需的程本通常高于非直接缓冲区，<br>直接缓冲区的内容可以驻留在常规的垃圾回收堆之外，因此他们对应用程序内存需求造成的影响可能并不明显，<br>所以建议直接缓冲区主要分配给易受基础系统的本机I&#x2F;O操作影响的大型、持久得缓冲区。<br>一般情况下，最好尽在直接缓冲区能在程序性能方面带来明显好处时分配他们。</li>
+<li>直接字节缓冲区还可以通过<code>FileChannel</code>的<code>map()</code>方法，将文件区域直接映射到内存中来创建，<br>该方法返回<code>MappedByteBuffer</code>。<code>Java</code>的实现有助于<code>JNI</code>从本地及代码创建直接字节缓冲区，<br>如果以上这些缓冲区中的某个缓冲区实例指的是不可访问的内存区域。<br>则试图访问该区域不会更改缓冲区的内容，并且将会在访问期间或稍后的时间导致抛出不确定的异常</li>
+<li>字节缓冲区是直接缓冲区还是非直接缓冲区可以通过调用其<code>isDirect()</code>方法来确定，提供此方法是为了能够在性能关键型代码中执行显式缓冲区管理。</li>
+</ul>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>本文简单介绍了<code>Buffer</code>的种类，并对常用方法进行乐简单的介绍</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://ifeve.com/buffers/#read">Java NIO系列教程（三） Buffer</a></p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>
