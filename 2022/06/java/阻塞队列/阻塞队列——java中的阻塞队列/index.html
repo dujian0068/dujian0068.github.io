@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>阻塞队列——java中的阻塞队列 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>阻塞队列——java中的阻塞队列</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/6/11
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/Java/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Java
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Java/" style="color: #ffa2c4">
+                    Java
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="color: #00bcd4">
+                    多线程
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%AE%80%E4%BB%8B">阻塞队列简介</a></li>
+<li><a href="#java%E4%B8%AD%E7%9A%84%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97">java中的阻塞队列</a></li>
+<li><a href="#BlockQueue%E4%B8%AD%E6%96%B9%E6%B3%95">BlockQueue中方法</a></li>
+<li><a href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86">阻塞队列的实现原理</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+<hr>
+<h2 id="阻塞队列简介"><a href="#阻塞队列简介" class="headerlink" title="阻塞队列简介"></a>阻塞队列简介</h2><p>阻塞队列(BlockingQueue)首先是一个支持先进先出的队列，与普通的队列完全相同；<br>其次是一个支持阻塞操作的队列，即：</p>
+<ul>
+<li>当队列满时，会阻塞执行插入操作的线程，直到队列不满。</li>
+<li>当队列为空时，会阻塞执行获取操作的线程，直到队列不为空。</li>
+</ul>
+<p>阻塞队列用在多线程的场景下，因此阻塞队列使用了锁机制来保证同步，这里使用的可重入锁；<br>而对于阻塞与唤醒机制则有与锁绑定的<code>Condition</code>实现</p>
+<p>应用场景：生产者消费者模式</p>
+<h2 id="java中的阻塞队列"><a href="#java中的阻塞队列" class="headerlink" title="java中的阻塞队列"></a>java中的阻塞队列</h2><p>java中的阻塞队列根据容量可以分为有界队列和无界队列：</p>
+<ul>
+<li>有界队列：队列中只能存储有限个元素，超出后存放元素线程会被阻塞或者失败。</li>
+<li>无界队列：队列中可以存储无限个元素。</li>
+</ul>
+<p>java8中提供了7种阻塞队列阻塞队列供开发者使用，如下表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">类名</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ArrayBlockingQueue</td>
+<td align="center">一个由数组结构组成的有界阻塞队列</td>
+</tr>
+<tr>
+<td align="center">LinkedBlockingQueue</td>
+<td align="center">由链表结构组成的有界阻塞队列(默认大小Integer.MAX_VALUE）</td>
+</tr>
+<tr>
+<td align="center">PriorityBlockingQueue</td>
+<td align="center">支持优先级排序的无界阻塞队列</td>
+</tr>
+<tr>
+<td align="center">DelayQueue</td>
+<td align="center">使用优先级队列实现的延迟无界阻塞队列</td>
+</tr>
+<tr>
+<td align="center">SynchronousQueue</td>
+<td align="center">不存储元素的阻塞队列，即单个元素的队列</td>
+</tr>
+<tr>
+<td align="center">LinkedTransferQueue</td>
+<td align="center">由链表结构组成的无界阻塞队列</td>
+</tr>
+<tr>
+<td align="center">LinkedBlockingDeque</td>
+<td align="center">由链表结构组成的双向阻塞队列</td>
+</tr>
+</tbody></table>
+<p>另外还有一个在<code>ScheduledThreadPoolExecutor</code>中实现的<code>DelayedWorkQueue</code>阻塞队列，<br>但这个阻塞队列开发者不能使用。它们之间的UML类图如下图：<br><img src="/2022/06/java/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E2%80%94%E2%80%94java%E4%B8%AD%E7%9A%84%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/BlockingQueue.png"></p>
+<p><code>BlockingQueue</code>接口是阻塞队列对外的访问接口，所有的阻塞队列都实现了<code>BlockQueue</code>中的方法</p>
+<h2 id="BlockQueue中方法"><a href="#BlockQueue中方法" class="headerlink" title="BlockQueue中方法"></a>BlockQueue中方法</h2><p>作为一个队列的核心方法就是入队和出队。由于存在阻塞策略，<code>BlockQueue</code>将出队入队的情况分为了四组，每组提供不同的方法：</p>
+<ul>
+<li><p>抛出异常：当队列满时，如果再往队列中插入元素，则抛出<code>IllegalStateException</code>异常；<br>当队列为空时，从队列中获取元素则抛出<code>NoSuchElementException</code>异常。</p>
+</li>
+<li><p>返回特定值(布尔值)：当队列满时，如果再往队列中插入元素，则返回false；当队列为空时，从队列中获取元素则返回null。</p>
+</li>
+<li><p>一直阻塞：当队列满时，如果再往队列中插入元素，阻塞当前线程直到队列中至少一个被移除或者响应中断退出；<br>当队列为空时，则阻塞当前线程直到至少一个元素元素入队或者响应中断退出。</p>
+</li>
+<li><p>超时退出：当队列满时，如果再往队列中插入元素，阻塞当前线程直到队列中至少一个被移除或者达到指定的等待时间退出或者响应中断退出；<br>当队列为空时，则阻塞当前线程直到至少一个元素元素入队或者达到指定的等待时间退出或者响应中断退出。</p>
+</li>
+</ul>
+<p>对于每种情况<code>BlockingQueue</code>提供的方法如下表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法\处理方式</th>
+<th align="center">抛出异常</th>
+<th align="center">返回特定值(布尔值)</th>
+<th align="center">一直阻塞</th>
+<th align="center">超时退出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">插入</td>
+<td align="center">add(e)</td>
+<td align="center">offer(e)</td>
+<td align="center">put(e)</td>
+<td align="center">offer(e,time,unit)</td>
+</tr>
+<tr>
+<td align="center">移除</td>
+<td align="center">remove()</td>
+<td align="center">poll()</td>
+<td align="center">take()</td>
+<td align="center">poll(time.unit)</td>
+</tr>
+<tr>
+<td align="center">检查</td>
+<td align="center">element()</td>
+<td align="center">peek()</td>
+<td align="center">不可用</td>
+<td align="center">不可用</td>
+</tr>
+</tbody></table>
+<p>上述方法一般用于生产者-消费者模型中，是其中的生产和消费操作队列的核心方法。<br>除了这些方法，<code>BlockingQueue</code>还提供了一些其他的方法如下表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法名称</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">remove(Object o)</td>
+<td align="center">从队列中移除一个指定值</td>
+</tr>
+<tr>
+<td align="center">size()</td>
+<td align="center">获取队列中元素的个数</td>
+</tr>
+<tr>
+<td align="center">contains(Object o)</td>
+<td align="center">判断队列是否包含指定的元素，但是这个元素在这次判断完可能就会被消费</td>
+</tr>
+<tr>
+<td align="center">drainTo(Collection&lt;? super E&gt; c)</td>
+<td align="center">将队列中元素放在给定的集合中，并返回添加的元素个数</td>
+</tr>
+<tr>
+<td align="center">drainTo(Collection&lt;? super E&gt; c, int maxElements)</td>
+<td align="center">将队列中元素取maxElements(不超过队列中元素个数)个放在给定的集合中，并返回添加的元素个数</td>
+</tr>
+<tr>
+<td align="center">remainingCapacity()</td>
+<td align="center">计算队列中还可以存放的元素个数</td>
+</tr>
+<tr>
+<td align="center">toArray()</td>
+<td align="center">以objetc数组的形式获取队列中所有的元素</td>
+</tr>
+<tr>
+<td align="center">toArray(T[] a)</td>
+<td align="center">以给定类型数组的方式获取队列中所有的元素</td>
+</tr>
+<tr>
+<td align="center">clear()</td>
+<td align="center">清空队列，危险的操作</td>
+</tr>
+</tbody></table>
+<h2 id="阻塞队列的实现原理"><a href="#阻塞队列的实现原理" class="headerlink" title="阻塞队列的实现原理"></a>阻塞队列的实现原理</h2><p>阻塞队列的实现依靠通知模式实现：当生产者向满了的队列中添加元素时，会阻塞住生产者，<br>直到消费者消费了一个队列中的元素后会通知消费者队列可用，此时再由生产者向队列中添加元素。反之亦然。</p>
+<p>阻塞队列的阻塞唤醒依靠<code>Condition</code>——条件队列来实现。</p>
+<p>以<code>ArrayBlockingQueue</code>为例说明：</p>
+<p><code>ArrayBlockingQueue</code>的定义：</p>
+<pre><code class="java">public class ArrayBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt;
+        implements BlockingQueue&lt;E&gt;, java.io.Serializable &#123;
+   
+    /** The queued items */
+    //以数组的结构存储队列的元素，采用的是循环数组
+    final Object[] items;
+
+    /** items index for next take, poll, peek or remove */
+    //队列的队头索引
+    int takeIndex;
+
+    /** items index for next put, offer, or add */
+    //队列的队尾索引
+    int putIndex;
+
+    /** Number of elements in the queue */
+    //队列中元素的个数
+    int count;
+
+    /** Main lock guarding all access */
+    //对于ArrayBlockingQueue所有的操作都需要加锁，
+    final ReentrantLock lock;
+
+    /** Condition for waiting takes */
+    //条件队列，当队列为空时阻塞消费者并在生产者生产后唤醒消费者
+    private final Condition notEmpty;
+
+    /** Condition for waiting puts */
+    //条件队列，当队列满时阻塞生产者，并在消费者消费队列后唤醒生产者
+    private final Condition notFull;
+&#125;
+</code></pre>
+<p>根据类的定义字段可以看到，有两个<code>Condition</code>条件队列，猜测以下过程</p>
+<ul>
+<li>当队列为空，消费者试图消费时应该调用<code>notEmpty.await()</code>方法阻塞，并在生产者生产后调用<code>notEmpty.single()</code>方法</li>
+<li>当队列已满，生产者试图放入元素应调用<code>notFull.await()</code>方法阻塞，并在消费者消费队列后调用<code>notFull.single()</code>方法</li>
+</ul>
+<p>向队列中添加元素<code>put()</code>方法的添加过程。</p>
+<pre><code class="Java">    /**
+    * 向队列中添加元素
+    * 当队列已满时需要阻塞当前线程
+    * 放入元素后唤醒因队列为空阻塞的消费者
+    */
+    public void put(E e) throws InterruptedException &#123;
+        checkNotNull(e);
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try &#123;
+            //当队列已满时需要notFull.await()阻塞当前线程
+            //offer(e,time,unit)方法就是阻塞的时候加了超时设定
+            while (count == items.length)
+                notFull.await();
+            //放入元素的过程
+            enqueue(e);
+        &#125; finally &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+    
+    /**enqueue实际添加元素的方法*/
+    private void enqueue(E x) &#123;
+        // assert lock.getHoldCount() == 1;
+        // assert items[putIndex] == null;
+        final Object[] items = this.items;
+        items[putIndex] = x;
+        if (++putIndex == items.length)
+            putIndex = 0;
+        count++;
+        //如果条件队列中存在等待的线程
+        //唤醒
+        notEmpty.signal();
+    &#125;
+</code></pre>
+<p>从队列中获取元素<code>take()</code>方法的获取过程。</p>
+<pre><code class="Java">    /**
+    * 从队列中获取元素
+    * 当队列已空时阻塞当前线程
+    * 从队列中消费元素后唤醒等待的生产线程
+    */
+    public E take() throws InterruptedException &#123;
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try &#123;
+            //队列为空需要阻塞当前线程
+            while (count == 0)
+                notEmpty.await();
+            //获取元素的过程
+            return dequeue();
+        &#125; finally &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+    
+    /**dequeue实际消费元素的方法*/
+    private E dequeue() &#123;
+       // assert lock.getHoldCount() == 1;
+       // assert items[takeIndex] != null;
+       final Object[] items = this.items;
+       @SuppressWarnings(&quot;unchecked&quot;)
+       E x = (E) items[takeIndex];
+       items[takeIndex] = null;
+       if (++takeIndex == items.length)
+           takeIndex = 0;
+       count--;
+       if (itrs != null)
+           itrs.elementDequeued();
+       //消费元素后从唤醒阻塞的生产者线程
+       notFull.signal();
+       return x;
+    &#125;
+</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>阻塞队列提供了不同于普通队列的增加、删除元素的方法，核心在与队列满时阻塞生产者和队列空时阻塞消费者。<br>这一阻塞过程依靠与锁绑定的<code>Condition</code>对象实现。<code>Condition</code>接口的实现在AQS中实现，具体的实现类是<br><code>ConditionObject</code></p>
+<hr>
+<p><font color="#FF3030">转载请标明出处</font></p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>
