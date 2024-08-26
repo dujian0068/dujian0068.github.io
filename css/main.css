@@ -251,7 +251,7 @@
 }
 #home-posts .post .category-and-date {
     color: #5c6b72;
-    margin-top: 15px;
+    margin-top: 10px;
     text-align: center;
     width: 100%;
 }
@@ -721,7 +721,7 @@ h5,
 h6 {
     color: #1e3e3f;
     font-weight: bold;
-    margin: 15px 0;
+    margin: 10px 0;
     word-break: keep-all;
 }
 h1 {
@@ -866,8 +866,8 @@ ol li {
         width: 850px;
     }
     #home-posts .post {
-        margin-bottom: 25px;
-        padding: 50px;
+        margin-bottom: 15px;
+        padding: 20px 50px;
     }
     #home-posts .post .description {
         padding: 20px 0;
