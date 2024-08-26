@@ -199,14 +199,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/NIO/" style="color: #03a9f4">
+                <a href="/tags/NIO/" style="color: #00bcd4">
                     NIO
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/Buffer/" style="color: #00a596">
+                <a href="/tags/Buffer/" style="color: #ffa2c4">
                     Buffer
                 </a>
             </span>
@@ -224,7 +224,7 @@
 <li>参考资料</li>
 </ul>
 <h2 id="Buffer简介"><a href="#Buffer简介" class="headerlink" title="Buffer简介"></a>Buffer简介</h2><p>缓冲区(<code>Buffer</code>):本质上是一个数组，用于临时保存、写入以及读取数据。在<code>Java NIO</code>中，<br>该内存块包含在<code>NIO Buffer</code>对象当中，<code>NIO Buffer</code>对象还提供了一组接口来访问该内存块。</p>
-<p>根据数据类型的不同，<code>Java</code>为除了<code>boolean</code>类型之外的其余7种基本类型提供了相应类型的缓冲区，<br>分别是<code>ByteBuffer</code>、<code>CharBuffer</code>、<code>ShortBuffer</code>、<code>IntBuffer</code>、<code>LongBuffer</code>、<br><code>FloatBuffer</code>、<code>DoubleBuffer</code>。他们都继承自抽象类<code>Buffer</code>类，他们的管理方式也都几乎一样。<br><code>UML</code>类图如下：<br><img src="/2020/07/nio/Java%20NIO%E4%B9%8BBuffer%E7%9A%84%E4%BD%BF%E7%94%A8/Buffer.png" alt="Buffer类UML类图"></p>
+<p>根据数据类型的不同，<code>Java</code>为除了<code>boolean</code>类型之外的其余7种基本类型提供了相应类型的缓冲区，<br>分别是<code>ByteBuffer</code>、<code>CharBuffer</code>、<code>ShortBuffer</code>、<code>IntBuffer</code>、<code>LongBuffer</code>、<br><code>FloatBuffer</code>、<code>DoubleBuffer</code>。他们都继承自抽象类<code>Buffer</code>类，他们的管理方式也都几乎一样。<br><code>UML</code>类图如下：<br>![Buffer类UML类图](Java NIO之Buffer的使用&#x2F;Buffer.png)</p>
 <h2 id="Buffer的核心属性"><a href="#Buffer的核心属性" class="headerlink" title="Buffer的核心属性"></a>Buffer的核心属性</h2><p><code>BUffer</code>类的部分实现如下：</p>
 <pre><code class="java">public abstract class Buffer &#123;
     // Invariants: mark &lt;= position &lt;= limit &lt;= capacity
@@ -447,10 +447,10 @@ byteBuffer.reset()
 <li>直接缓冲区：通过<code>allocateDirect()</code>方法分配直接缓冲区，将缓冲区建立在物理内存中，可以在某些情况下提高效率</li>
 </ul>
 <h4 id="非直接缓冲区"><a href="#非直接缓冲区" class="headerlink" title="非直接缓冲区"></a>非直接缓冲区</h4><ul>
-<li>非直接缓冲区数据流向图<br><img src="/2020/07/nio/Java%20NIO%E4%B9%8BBuffer%E7%9A%84%E4%BD%BF%E7%94%A8/%E9%9D%9E%E7%9B%B4%E6%8E%A5%E7%BC%93%E5%86%B2%E5%8C%BA.png" alt="非直接缓冲区数据流向图"></li>
+<li>非直接缓冲区数据流向图<br>![非直接缓冲区数据流向图](Java NIO之Buffer的使用&#x2F;非直接缓冲区.png)</li>
 </ul>
 <h4 id="直接缓冲区"><a href="#直接缓冲区" class="headerlink" title="直接缓冲区"></a>直接缓冲区</h4><ul>
-<li>直接缓冲区数据流向图<br><img src="/2020/07/nio/Java%20NIO%E4%B9%8BBuffer%E7%9A%84%E4%BD%BF%E7%94%A8/%E7%9B%B4%E6%8E%A5%E7%BC%93%E5%86%B2%E5%8C%BA.png" alt="直接缓冲区数据流向图"></li>
+<li>直接缓冲区数据流向图<br>![直接缓冲区数据流向图](Java NIO之Buffer的使用&#x2F;直接缓冲区.png)</li>
 </ul>
 <p>直接缓冲区（物理内存映射文件）：相比非直接缓冲区省略了<code>copy</code>的过程，所以说直接缓区可以一定程度上提高效率</p>
 <p>弊端：</p>

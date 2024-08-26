@@ -1,0 +1,898 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>从JDK源码理解java引用 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>从JDK源码理解java引用</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/8/14
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/Java/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Java
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Java/" style="color: #ff7d73">
+                    Java
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#java%E4%B8%AD%E7%9A%84%E5%BC%95%E7%94%A8">java中的引用</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8%E9%98%9F%E5%88%97">引用队列</a></li>
+<li><a href="#%E8%99%9A%E5%BC%95%E7%94%A8%E5%BC%B1%E5%BC%95%E7%94%A8%E8%BD%AF%E5%BC%95%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0">虚引用、弱引用、软引用的实现</a><ul>
+<li><a href="#%E5%BC%95%E7%94%A8%E7%B1%BB%E7%9A%84%E5%AE%9E%E7%8E%B0">引用类的实现</a></li>
+</ul>
+</li>
+<li><a href="#referencehandler%E7%BA%BF%E7%A8%8B">ReferenceHandler线程</a><ul>
+<li><a href="#referencehandler%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%90%AF%E5%8A%A8">ReferenceHandler线程的启动</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%95%E7%94%A8%E9%98%9F%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0">引用队列的实现</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<hr>
+<h2 id="java中的引用"><a href="#java中的引用" class="headerlink" title="java中的引用"></a>java中的引用</h2><p><code>JDK 1.2</code>之后，把对象的引用分为了四种类型，分别为：强引用、软应用、弱引用和虚引用，以方便控制java对象的生命周期。</p>
+<ol>
+<li>强引用<blockquote>
+<p>强引用是工作开发中使用最多的引用类型。比如声明一个字符串变量<code>String str=&quot;abc&quot;</code>。<strong>只要对象与强引用关联，<code>JVM</code>就不会回收这个对象，即不会回收这个区域<br>的内存。</strong> 如果我们希望回收<code>abc</code>这个对象，那么就需要显示的将<code>str</code>设置为<code>null</code>,即<code>str=null</code>。那么jvm就会在下一次<code>gc</code>时回收这部分内存区域。</p>
+</blockquote>
+</li>
+</ol>
+<p>2.软引用</p>
+<blockquote>
+<p>软引用可以用来描述一些非必须的对象，<code>java</code>中使用<code>SoftRefence</code>来表示软引用。对于软引用的生命如下：</p>
+<pre><code>  SoftRefence&lt;String&gt; str = new SoftRefence&lt;String&gt;(new String(&quot;abc&quot;))；
+  或者
+  SoftReference&lt;String&gt; str=new SoftReference&lt;&gt;(&quot;abc&quot;);
+</code></pre>
+<p>对于软引用关联的对象，只要系统内存足够，就不会回收这部分内存，只有当系统要发生内存泄漏之前才会将<strong>只与</strong>软引用关联的对象进行回收，当回收完之后内存还不足时<br>会抛出内存溢出的异常。</p>
+</blockquote>
+<ol start="3">
+<li>弱引用<blockquote>
+<p>弱引用用来描述非必须的对象。使用方法如下：</p>
+<pre><code>  WeakReference&lt;String&gt; str=new WeakReference&lt;&gt;(&quot;abc&quot;);
+  或者
+  WeakReference&lt;String&gt; str=new WeakReference&lt;String&gt;(new String(&quot;abc&quot;));
+</code></pre>
+<p>对于只使用弱引用描述的对象，这个对象可以通过弱引用用找到，但是他只能存活到下一次<code>gc</code>之前,也就是说，<strong>只被弱引用关联的对象，在下一次<code>gc</code>时，会被垃圾回收掉。</strong><br>验证如下：</p>
+<pre><code class="java">public class Weak &#123;
+    public static void main(String[] args) throws InterruptedException &#123;
+        String str=&quot;abc&quot;;
+</code></pre>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<pre><code>    WeakReference&lt;String&gt; weakStr=new WeakReference&lt;&gt;(str);
+    System.out.println(&quot;=======当对象同时被强引用和弱引用关联，执行一次gc======&quot;);
+    System.gc();
+    System.out.println(weakStr.get());
+    System.out.println(&quot;========当对象只与弱引用关联======&quot;);
+    str = null;
+    System.out.println(weakStr.get());
+    System.out.println(&quot;========再次执行gc======&quot;);
+    System.gc();
+    Thread.sleep(10000);
+    System.out.println(weakStr);
+    System.out.println(weakStr.get());
+&#125;
+</code></pre>
+<p>}</p>
+<pre><code>结果如下：
+</code></pre>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;当对象同时被强引用和弱引用关联，执行一次gc&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>abc<br>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;当对象只与弱引用关联&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>abc<br>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;再次执行gc&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>java.lang.ref.WeakReference@1b6d3586<br>abc</p>
+<pre><code>咦没回收！！！再来看个例子
+```java
+public class Weak &#123;
+    public static void main(String[] args) throws InterruptedException &#123;
+        Integer i=new Integer(10);
+        WeakReference&lt;Integer&gt; weakStr=new WeakReference&lt;&gt;(i);
+        System.out.println(&quot;=======当对象同时被强引用和弱引用关联，执行一次gc======&quot;);
+        System.gc();
+        System.out.println(weakStr.get());
+        System.out.println(&quot;========当对象只与弱引用关联======&quot;);
+        i = null;
+        System.out.println(weakStr.get());
+        System.out.println(&quot;========再次执行gc======&quot;);
+        System.gc();
+        Thread.sleep(10000);
+        System.out.println(weakStr);
+        System.out.println(weakStr.get());
+    &#125;
+&#125;
+</code></pre>
+<p>结果如下：</p>
+<pre><code>=======当对象同时被强引用和弱引用关联，执行一次gc======
+10
+========当对象只与弱引用关联======
+10
+========再次执行gc======
+java.lang.ref.WeakReference@1b6d3586
+null
+</code></pre>
+<p>回收了！！！为什么？？</p>
+</blockquote>
+<ol start="4">
+<li>虚引用<blockquote>
+<p>虚引用是引用关系中最弱的一种引用，也被称为幽灵引用或者幻影引用。一个对象是否存在虚引用，完全不会对其生存时间构成影响，也无法通过虚引用来获取一个对象实例，<br>为对象设置虚引用的目的是为了能够在对象被回收器回收时得到一个通知。<br>虚引用的使用必须和一个引用队列绑定，使用举例如下：</p>
+<pre><code>  PhantomReference&lt;String&gt; str= new PhantomReference&lt;&gt;(&quot;abc&quot;,new ReferenceQueue&lt;&gt;());
+</code></pre>
+</blockquote>
+</li>
+</ol>
+<h2 id="引用队列"><a href="#引用队列" class="headerlink" title="引用队列"></a>引用队列</h2><p>引用队列提供了一种可以直观了解垃圾回收的方式。引用队列可以和软引用、弱引用和虚引用搭配使用，当<code>JVM</code>进行垃圾收集的时候会将引用对象加入到引用队列中，<br>即：在引用队列中的节点(引用类型的对象)所关联的对象已经被回收。例子如下：</p>
+<pre><code>public static void main(String[] args) &#123;
+    Object object=new Object();
+    ReferenceQueue&lt;Object&gt; objectReferenceQueue=new ReferenceQueue&lt;&gt;();
+    WeakReference&lt;Object&gt; objectWeakReference=new WeakReference&lt;&gt;(object,objectReferenceQueue);
+    object=null;
+    System.gc();
+    System.out.println(objectWeakReference.get());
+    System.out.println(objectReferenceQueue.poll());
+&#125;
+</code></pre>
+<p>输出结果如下：</p>
+<pre><code>objectWeakReference.get()====null
+objectWeakReference====java.lang.ref.WeakReference@1b6d3586
+objectReferenceQueue.poll()====java.lang.ref.WeakReference@1b6d3586
+</code></pre>
+<p>上面的例子中<code>object</code>对象关联了一个弱引用<code>objectWeakReference</code>。从输出结果来看，当<code>object</code>对象垃圾回收之后，<code>objectWeakReference</code>对象被加入到了引用队列当中。</p>
+<h2 id="虚引用、弱引用、软引用的实现"><a href="#虚引用、弱引用、软引用的实现" class="headerlink" title="虚引用、弱引用、软引用的实现"></a>虚引用、弱引用、软引用的实现</h2><p>虚引用、弱引用、软引用都继承自<code>Reference(引用类)</code>抽象类，另外还有一个<code>FinaReference</code>也是继承自这个类。他们之间的类图如下：</p>
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/2022/08/java/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/Reference.png">
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">图1&nbsp;&nbsp;Reference的类图</div>
+</center>
+
+<h4 id="引用类的实现"><a href="#引用类的实现" class="headerlink" title="引用类的实现"></a>引用类的实现</h4><p>引用类定义了所有引用对象的通用的操作，这个类和垃圾回收机制紧密象关，是一个抽象类不能被直接实例化，类的定义成如下：</p>
+<pre><code class="java">public abstract class Reference&lt;T&gt; &#123;
+   
+    //当创建一个引用对象并绑定一个强引用对象时，
+    //就是对这个字段赋值，将这个字段指向强引用的对象
+    //GC特殊处理的对象
+    private T referent;         /* Treated specially by GC */
+
+    // reference对象关联的引用队列。如果对象被回收，这个队列将作为通知的回调队列。
+    // 当reference对象关联的对象将要被回收时，reference对象将会被放进引用队列，就可以从引用队列来监控垃圾回收情况
+    volatile ReferenceQueue&lt;? super T&gt; queue;
+
+    /* When active:   NULL
+     *     pending:   this
+     *    Enqueued:   next reference in queue (or this if last)
+     *    Inactive:   this
+     */
+    // 这个字段用于在引用队列中构建单项链表。在引用队列中，队列中的每个元素是一个引用类型，这个字段用于指向下一个节点
+    /**
+     * 当引用对象处于不同状态时，这个字段的值不同
+     * Active:NULL
+     * Pending:THIS
+     * Enqueue:NEXT
+     * Inactive:THIS
+     */
+    @SuppressWarnings(&quot;rawtypes&quot;)
+    volatile Reference next;
+
+    /* When active:   next element in a discovered reference list maintained by GC (or this if last)
+     *     pending:   next element in the pending list (or null if last)
+     *   otherwise:   NULL
+     */
+    // 基于状态不同表示的链表不同
+    // 主要是pending-reference列表的下一个元素
+    // 需要和 pending属性搭配使用，
+    transient private Reference&lt;T&gt; discovered;  /* used by VM */
+    
+    /* Object used to synchronize with the garbage collector.  The collector
+     * must acquire this lock at the beginning of each collection cycle.  It is
+     * therefore critical that any code holding this lock complete as quickly
+     * as possible, allocate no new objects, and avoid calling user code.
+     */
+    // 这个锁用于垃圾收集器的同步，收集器在垃圾收集之前必须获取锁，所以任何获得整个锁的代码都必须尽快完成
+    // 尽量不创建新的对象，尽量不调用用户代码。
+    static private class Lock &#123; &#125;
+    private static Lock lock = new Lock();
+
+
+    /* List of References waiting to be enqueued.  The collector adds
+     * References to this list, while the Reference-handler thread removes
+     * them.  This list is protected by the above lock object. The
+     * list uses the discovered field to link its elements.
+     */
+    /**
+     * 一个处于pending状态链表，他们都在等待进入引用队列，
+     * 垃圾收集器会向该列表添加reference对象，而ReferenceHandler线程会处理这个链表
+     * 链表的节点使用discovered属性代表链表的下一个节点的位置
+     * 就相当于链表的head和next
+     * 在对链表操作时必须获得上面的锁对象，避免想成不安全
+     * 因为可能有这里在尝试将pending状态的引用对象加入引用队列，jvm需要进行垃圾回收发现可达性改变的对象
+     */
+    private static Reference&lt;Object&gt; pending = null;
+
+    
+    // some code
+&#125;
+</code></pre>
+<p>上面的代码中有描述了四个引用的状态，分别是<code>Active</code>、<code>Pending</code>、<code>Enqueued</code>、<code>Inactive</code>,但是在类的定义中是没有一个属性来专门表示这个状态的。<br>它通过<code>queue</code>属性和<code>next</code>属性联合起来表示。</p>
+<ul>
+<li><code>Active</code>：引用指向的对象还存在强引用，对于Active的Reference，它的next为null;如果在创建引用的时候传入了<code>ReferenceQueue</code>,那么<code>queue</code>为传入的<code>ReferenceQueue</code>，否则为<code>null</code></li>
+<li><code>Pending</code>：等待着加入到该<code>Reference</code>在创建时注册的<code>ReferenceQueue</code>，它的next为自己</li>
+<li><code>Enqueued</code>：表示该<code>Reference</code>已经加入到其创建时注册的<code>ReferenceQueue</code>，它的<code>next</code>为<code>ReferenceQueue</code>中的下个元素</li>
+<li><code>Inactive</code>：当从引用队列中<code>poll</code>出来之后将会处于这个状态，如果没有注册引用队列，会直接到这个状态。一旦进入此状态，不会对该Reference做任何事，该状态是最终态</li>
+</ul>
+<p>构造方法：</p>
+<pre><code>    /* -- Constructors -- */
+
+    Reference(T referent) &#123;
+        this(referent, null);
+    &#125;
+
+    Reference(T referent, ReferenceQueue&lt;? super T&gt; queue) &#123;
+        this.referent = referent;
+        this.queue = (queue == null) ? ReferenceQueue.NULL : queue;
+    &#125;
+</code></pre>
+<p>总体来说，构造方法只是对<code>reference</code>字段和<code>queue</code>字段赋值，如果没有传入引用队列，则为<code>ReferenceQueue.NULL</code></p>
+<p>其他一些实例方法：</p>
+<pre><code>// 获取关联的实例对象
+@HotSpotIntrinsicCandidate
+public T get() &#123;
+     return this.referent;
+&#125;
+
+// 设置reference字段为null
+public void clear() &#123;
+     this.referent = null;
+&#125;
+
+// 判断是否处于enqeued状态
+public boolean isEnqueued() &#123;
+     return (this.queue == ReferenceQueue.ENQUEUED);
+&#125;
+
+// 将当前的引用放入引用队列，此时会将reference设置为null
+public boolean enqueue() &#123;
+     this.referent = null;
+     return this.queue.enqueue(this);
+&#125;
+
+// 禁止clone方法
+@Override
+protected Object clone() throws CloneNotSupportedException &#123;
+     throw new CloneNotSupportedException();
+&#125;
+
+// 确保给定的引用实例是强可达的
+@ForceInline
+public static void reachabilityFence(Object ref) &#123;
+&#125;
+</code></pre>
+<h2 id="ReferenceHandler线程"><a href="#ReferenceHandler线程" class="headerlink" title="ReferenceHandler线程"></a>ReferenceHandler线程</h2><p>在<code>reference</code>类的实现中还定义了一个继承了<code>Thread</code>类静态内部类。并且在<code>reference</code>还有一个静态代码块启动了一个线程，用来处理<code>pending</code>链中的对象。</p>
+<p><code>ReferenceHandler</code>类定义：</p>
+<pre><code class="java">private static class ReferenceHandler extends Thread &#123;
+
+    // 确保对应的类已经加载并初始化
+    // 其实这列确保的就是InterruptedException类和Cleaner类
+    private static void ensureClassInitialized(Class&lt;?&gt; clazz) &#123;
+        try &#123;
+            Class.forName(clazz.getName(), true, clazz.getClassLoader());
+        &#125; catch (ClassNotFoundException e) &#123;
+            throw (Error) new NoClassDefFoundError(e.getMessage()).initCause(e);
+        &#125;
+    &#125;
+
+    static &#123;
+        // pre-load and initialize InterruptedException and Cleaner classes
+        // so that we don&#39;t get into trouble later in the run loop if there&#39;s
+        // memory shortage while loading/initializing them lazily.
+        ensureClassInitialized(InterruptedException.class);
+        ensureClassInitialized(Cleaner.class);
+    &#125;
+ 
+    // 构造方法
+    ReferenceHandler(ThreadGroup g, String name) &#123;
+        super(g, name);
+    &#125;
+
+    public void run() &#123;
+        // 死循环处理pending状态的对象
+        while (true) &#123;
+            tryHandlePending(true);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><code>tryHandlePending()</code>方法</p>
+<pre><code>/**
+ * Try handle pending &#123;@link Reference&#125; if there is one.&lt;p&gt;
+ * Return &#123;@code true&#125; as a hint that there might be another
+ * &#123;@link Reference&#125; pending or &#123;@code false&#125; when there are no more pending
+ * &#123;@link Reference&#125;s at the moment and the program can do some other
+ * useful work instead of looping.
+ *
+ * @param waitForNotify if &#123;@code true&#125; and there was no pending
+ *                      &#123;@link Reference&#125;, wait until notified from VM
+ *                      or interrupted; if &#123;@code false&#125;, return immediately
+ *                      when there is no pending &#123;@link Reference&#125;.
+ * @return &#123;@code true&#125; if there was a &#123;@link Reference&#125; pending and it
+ *         was processed, or we waited for notification and either got it
+ *         or thread was interrupted before being notified;
+ *         &#123;@code false&#125; otherwise.
+ */
+// 处理pending状态的reference，如果有的话。
+// 如果链表的后续还有处于pending状态的节点则返回true
+// 如果后续没有处于pending状态的节点，则返=返回false；
+static boolean tryHandlePending(boolean waitForNotify) &#123;
+    Reference&lt;Object&gt; r;
+    Cleaner c;
+    try &#123;
+        synchronized (lock) &#123;
+            // pending定义在reference类中：private static Reference&lt;Object&gt; pending = null;
+            // 这个字段代表了一个reference类型的链表，一系列等待进入队列的引用对象，
+            // 垃圾收集器会向该列表添加reference对象，而ReferenceHandler线程会处理这个链表
+            // 这个列表由上面的锁对象保护，避免线程不安全的事件。
+            // pengding为静态属性，全局只有一份
+
+            //pending不为null则这个链表中存在等待入队的元素
+            if (pending != null) &#123;
+                r = pending;
+                // &#39;instanceof&#39; might throw OutOfMemoryError sometimes
+                // so do this before un-linking &#39;r&#39; from the &#39;pending&#39; chain...
+                c = r instanceof Cleaner ? (Cleaner) r : null;
+
+
+                // unlink &#39;r&#39; from &#39;pending&#39; chain
+                /**
+                 * 这里使用discovered表示垃圾收集器发现的处于pengding状态的一个节点，
+                 * 可以将起理解为链表的节点的next属性，代表指向下一个节点的指针
+                 * 这里代表指向下一个处于pengding状态的引用对象
+                 *
+                 * 这个字段定义在reference类中：transient private Reference&lt;T&gt; discovered;  /* used by VM */
+                 * 这个字段由jvm维护
+                 */
+                pending = r.discovered;
+                
+                // 将获取到的pending节点的下一个节点改为null
+                // enqueue和Inactive状态的节点的discovered属性值为null
+                r.discovered = null;
+            &#125; else &#123;
+                // The waiting on the lock may cause an OutOfMemoryError
+                // because it may try to allocate exception objects.
+
+                // 这块的返回值很有意思
+                // 如果传入的waitForNotify值是true，当发现pending为null时，会执行Object.wait方法
+                // 这时会释放自己持有的lock锁，然后由JVM发现对象的可达性发生变化并将对象加入pending队列时
+                // 会使用到Object.notifyAll()方法从阻塞中唤醒，
+                // 那么此时pending队列中就已经有了元素，可以继续循环将pending状态的节点放入queue
+
+                // 如果waitForNotify是false，那么如果为null则直接返回null，代表后续没有pending状态的节点
+                if (waitForNotify) &#123;
+                    lock.wait();
+                &#125;
+                // retry if waited
+                return waitForNotify;
+            &#125;
+        &#125;
+    &#125; catch (OutOfMemoryError x) &#123;
+        // Give other threads CPU time so they hopefully drop some live references
+        // and GC reclaims some space.
+        // Also prevent CPU intensive spinning in case &#39;r instanceof Cleaner&#39; above
+        // persistently throws OOME for some time...
+        Thread.yield();
+        // retry
+        return true;
+    &#125; catch (InterruptedException x) &#123;
+        // retry
+        return true;
+    &#125;
+
+    // Fast path for cleaners
+    if (c != null) &#123;
+        c.clean();
+        return true;
+    &#125;
+    // 对于获取的reference对象，获取其引用队列
+    // 执行入队方法，入队方法在引用队列中实现。
+    ReferenceQueue&lt;? super Object&gt; q = r.queue;
+    if (q != ReferenceQueue.NULL) q.enqueue(r);
+
+    //这里直接返回true，代表后续有等待pending的节点，但其实有没有无所谓，下一次再进来的时候还是会判断pending状态的节点存在不存在。
+    return true;
+&#125;
+</code></pre>
+<h4 id="ReferenceHandler线程的启动"><a href="#ReferenceHandler线程的启动" class="headerlink" title="ReferenceHandler线程的启动"></a>ReferenceHandler线程的启动</h4><p><code>ReferenceHandler</code>线程的启动在<code>reference</code>类的静态代码块中，<code>ReferenceHandler</code>是以守护线程的方式启动。</p>
+<pre><code>static &#123;
+    ThreadGroup tg = Thread.currentThread().getThreadGroup();
+    for (ThreadGroup tgn = tg;
+         tgn != null;
+         tg = tgn, tgn = tg.getParent());
+    //创建ReferenceHandler对象
+    Thread handler = new ReferenceHandler(tg, &quot;Reference Handler&quot;);
+    /* If there were a special system-only priority greater than
+     * MAX_PRIORITY, it would be used here
+     */
+    //设置线程优先级
+    handler.setPriority(Thread.MAX_PRIORITY);
+    //设置为守护线程
+    handler.setDaemon(true);
+    //启动线程
+    handler.start();
+
+    // 注意这里覆盖了全局的jdk.internal.misc.JavaLangRefAccess实现
+    // 但这里不太明白这段代码是为了做什么
+    // provide access in SharedSecrets
+    SharedSecrets.setJavaLangRefAccess(new JavaLangRefAccess() &#123;
+        @Override
+        public boolean tryHandlePendingReference() &#123;
+            return tryHandlePending(false);
+        &#125;
+    &#125;);
+&#125;
+</code></pre>
+<h2 id="引用队列的实现"><a href="#引用队列的实现" class="headerlink" title="引用队列的实现"></a>引用队列的实现</h2><p>引用队列因为同时有<code>ReferenceHandler</code>线程在使用也由用户线程在使用，因此需要进行同步。</p>
+<p>引用队列的本质是一个单链表，并且链表的的节点就是<code>reference</code>对象，定义如下：</p>
+<pre><code class="java">/**
+ * Reference queues, to which registered reference objects are appended by the
+ * garbage collector after the appropriate reachability changes are detected.
+ *
+ * @author   Mark Reinhold
+ * @since    1.2
+ */
+// 引用队列，他在实例化引用对象的时候被注册到引用对象当中，当引用对象关联的对象的可达性发生变化时，由`ReferenceHandler`线程将其加入注册的引用队列
+public class ReferenceQueue&lt;T&gt; &#123;
+
+    /**
+     * Constructs a new reference-object queue.
+     */
+    public ReferenceQueue() &#123; &#125;
+
+    private static class Null&lt;S&gt; extends ReferenceQueue&lt;S&gt; &#123;
+        //重写enqueue方法，对于在创建引用对象时未指定引用队列的对象，引用队列就是NULL
+        boolean enqueue(Reference&lt;? extends S&gt; r) &#123;
+            return false;
+        &#125;
+    &#125;
+    
+    // 对于在创建引用对象时未指定引用队列的对象，引用队列就是这个字段
+    static ReferenceQueue&lt;Object&gt; NULL = new Null&lt;&gt;();
+    // 对于已经咋引用队列中的对象，其关联的引用队列就是这个属性
+    static ReferenceQueue&lt;Object&gt; ENQUEUED = new Null&lt;&gt;();
+
+    static private class Lock &#123; &#125;;
+    private Lock lock = new Lock();
+    //引用队列的头结点。引用队列访问的入口有且仅有一个头结点
+    private volatile Reference&lt;? extends T&gt; head = null;
+    private long queueLength = 0;
+
+    // 将引用对象加入队列
+    boolean enqueue(Reference&lt;? extends T&gt; r) &#123; /* Called only by Reference class */
+        synchronized (lock) &#123;
+            // Check that since getting the lock this reference hasn&#39;t already been
+            // enqueued (and even then removed)
+            //获取待入队的引用对象关联的引用队列
+            ReferenceQueue&lt;?&gt; queue = r.queue;
+            // 引用对象关联的对象为NULL或者ENQUEUED代表其已经出了对列或者已经在队列中，直接返回false
+            // 这里为什么不说NULL可能是引用对象在创建时没有注册引用队列呢？
+            // 因为在调用入队方法前已经进行了判断，
+            if ((queue == NULL) || (queue == ENQUEUED)) &#123;
+                return false;
+            &#125;
+            assert queue == this;
+            // 将引用对象关联的引用队列改为ENQUEUED，代表其已经入队
+            r.queue = ENQUEUED;
+            //入队方式：修改链表的头结点
+            r.next = (head == null) ? r : head;
+            //移动头结点
+            head = r;
+            queueLength++;
+            if (r instanceof FinalReference) &#123;
+                sun.misc.VM.addFinalRefCount(1);
+            &#125;
+            //唤醒阻塞在这个锁上的其他线程
+            lock.notifyAll();
+            return true;
+        &#125;
+    &#125;
+ 
+    // 引用对象出队的方法，在调用这个方法之前必须获取锁
+    private Reference&lt;? extends T&gt; reallyPoll() &#123;       /* Must hold lock */
+        Reference&lt;? extends T&gt; r = head;
+        // head != null,代表队列不为null
+        if (r != null) &#123;
+            @SuppressWarnings(&quot;unchecked&quot;)
+            Reference&lt;? extends T&gt; rn = r.next;
+            //移动head位置，并将去出队的对象赋值给r
+            head = (rn == r) ? null : rn;
+            // 设置出队的对象关联的引用队列为null
+            r.queue = NULL;
+            // 引用对象的下一个节点指向自己，代表引用已经失效，引用的状态将转移到Inactive
+            r.next = r;
+            queueLength--;
+            //解释在后面
+            if (r instanceof FinalReference) &#123;
+                sun.misc.VM.addFinalRefCount(-1);
+            &#125;
+            return r;
+        &#125;
+        return null;
+    &#125;
+
+    /**
+     * Polls this queue to see if a reference object is available.  If one is
+     * available without further delay then it is removed from the queue and
+     * returned.  Otherwise this method immediately returns &lt;tt&gt;null&lt;/tt&gt;.
+     *
+     * @return  A reference object, if one was immediately available,
+     *          otherwise &lt;code&gt;null&lt;/code&gt;
+     */
+    // 从引用队列中获取引用对象
+    public Reference&lt;? extends T&gt; poll() &#123;
+        if (head == null)
+            return null;
+        synchronized (lock) &#123;
+            // 执行reallyPoll之前必须获取锁
+            return reallyPoll();
+        &#125;
+    &#125;
+
+    /**
+     * Removes the next reference object in this queue, blocking until either
+     * one becomes available or the given timeout period expires.
+     *
+     * &lt;p&gt; This method does not offer real-time guarantees: It schedules the
+     * timeout as if by invoking the &#123;@link Object#wait(long)&#125; method.
+     *
+     * @param  timeout  If positive, block for up to &lt;code&gt;timeout&lt;/code&gt;
+     *                  milliseconds while waiting for a reference to be
+     *                  added to this queue.  If zero, block indefinitely.
+     *
+     * @return  A reference object, if one was available within the specified
+     *          timeout period, otherwise &lt;code&gt;null&lt;/code&gt;
+     *
+     * @throws  IllegalArgumentException
+     *          If the value of the timeout argument is negative
+     *
+     * @throws  InterruptedException
+     *          If the timeout wait is interrupted
+     */
+    // poll方法不保证一定能拿到一个引用队列中的引用对象(如果引用队列没有引用对象则拿不到)
+    // remove当拿的时候没有引用队列为空的话，会阻塞线程，直到队列中添加了引用对象或者超时
+    // 因此不能保证时效性
+    // 这也就解释了为什么在enqueue方法的最后调用了Object.notifyAll方法
+    // remove也有可能拿到空对象
+    // 同时会响应中断
+    public Reference&lt;? extends T&gt; remove(long timeout)
+        throws IllegalArgumentException, InterruptedException
+    &#123;
+        if (timeout &lt; 0) &#123;
+            throw new IllegalArgumentException(&quot;Negative timeout value&quot;);
+        &#125;
+        synchronized (lock) &#123;
+            // 执行reallyPoll之前必须获取锁
+            Reference&lt;? extends T&gt; r = reallyPoll();
+            if (r != null) return r;
+            long start = (timeout == 0) ? 0 : System.nanoTime();
+            // 循环获取引用队列中head指向的引用对象
+            for (;;) &#123;
+                lock.wait(timeout);
+                r = reallyPoll();
+                if (r != null) return r;
+                if (timeout != 0) &#123;
+                    long end = System.nanoTime();
+                    timeout -= (end - start) / 1000_000;
+                    if (timeout &lt;= 0) return null;
+                    start = end;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    /**
+     * Removes the next reference object in this queue, blocking until one
+     * becomes available.
+     *
+     * @return A reference object, blocking until one becomes available
+     * @throws  InterruptedException  If the wait is interrupted
+     */
+    // 同remove方法
+    public Reference&lt;? extends T&gt; remove() throws InterruptedException &#123;
+        return remove(0);
+    &#125;
+
+    /**
+     * Iterate queue and invoke given action with each Reference.
+     * Suitable for diagnostic purposes.
+     * WARNING: any use of this method should make sure to not
+     * retain the referents of iterated references (in case of
+     * FinalReference(s)) so that their life is not prolonged more
+     * than necessary.
+     */
+    // 迭代整个引用队列，并对每个引用对象执行给定的操作。
+    void forEach(Consumer&lt;? super Reference&lt;? extends T&gt;&gt; action) &#123;
+        for (Reference&lt;? extends T&gt; r = head; r != null;) &#123;
+            action.accept(r);
+            @SuppressWarnings(&quot;unchecked&quot;)
+            Reference&lt;? extends T&gt; rn = r.next;
+            if (rn == r) &#123;
+                if (r.queue == ENQUEUED) &#123;
+                    // still enqueued -&gt; we reached end of chain
+                    r = null;
+                &#125; else &#123;
+                    // already dequeued: r.queue == NULL; -&gt;
+                    // restart from head when overtaken by queue poller(s)
+                    r = head;
+                &#125;
+            &#125; else &#123;
+                // next in chain
+                r = rn;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>个人感觉不论添加缓缓i删除元素都是从<code>head</code>处，叫引用栈更合适。感觉特性更像一个栈。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Reference</code>是非强引用的其他三种类型的引用的父类。而<code>ReferenceQueue</code>的结构指保存了一个链表的头结点，通过头结点来完成入队和出对的操作(感觉更像栈)。<br>在<code>Reference</code>类中使用静态代码块创建了一个<code>ReferenceHandler</code>守护线程来完成将<code>pending</code>状态的引用对象放到引用队列中。本文其实还差了一个<code>FinaReference</code>，<br>这个等总结垃圾回收的时候再总结。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/throwable/p/12271653.html">深入理解JDK中的Reference原理和源码实现</a></li>
+</ul>
+<hr>
+<p><font color="#FF3030">转载请标明出处</font></p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>

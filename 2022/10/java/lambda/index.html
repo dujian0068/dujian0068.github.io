@@ -202,7 +202,8 @@
     </div>
     
     <div class="content" v-pre>
-        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+        <hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
 <li><a href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3">函数式接口</a></li>
 <li><a href="#lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AE%80%E4%BB%8B">lambda 表达式简介</a><ul>
 <li><a href="#%E7%90%86%E8%A7%A3lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E2%80%94%E2%80%94%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB">理解lambda表达式——匿名内部类</a><span id="more"></span></li>
@@ -217,6 +218,7 @@
 </li>
 <li><a href="#java8-%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3">java8+中的函数式接口</a></li>
 </ul>
+<hr>
 <h2 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h2><p>如果一个<code>Java</code>接口类包含且仅包含一个无默认实现的方法定义，那么他被称为函数式接口。这个方法定义了接口的预期用途。<br><code>@FunctionalInterface</code>注解指示一个接口类是一个函数接口，不允许有多个没有默认实现的接口，但不强制要求在接口上添加该注解</p>
 <p>示例1：定义一个函数式接口</p>
 <pre><code class="java">@FunctionalInterface
@@ -315,6 +317,8 @@ lambda表达式中执行this ==========  cn.bmilk.Test@4bf558aa
 <p> 之所以引用外层变量必须是<code>final</code>是因为，局部变量被定义再栈帧中，<code>java</code>访问局部变量的时候实际上是访问他的副本，多个线程对应了多个栈，当<code>lambda</code>表达式执行线程与定义线程不是同一个情况下，如果变量不被定义为<code>final</code>,当一个线程改变了变量值，另一个有可能会读取不到最新值导致出错。</p>
 </blockquote>
 <h2 id="java8-中的函数式接口"><a href="#java8-中的函数式接口" class="headerlink" title="java8+中的函数式接口"></a>java8+中的函数式接口</h2><p><code>java8</code>及更高版本内置了一系列的函数式接口，被放在<code>java.util.function</code>包下，用于支持j函数式编程。另外在之前的版本中存在的<code>java.lang.Runnable</code>、<code>java.util.Comparator</code>也都可以用于函数式编程</p>
+<hr>
+<p><font color="#FF3030">转载请标明出处</font></p>
 
     </div>
     

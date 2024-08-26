@@ -1,0 +1,477 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>JavaSPI详解 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>JavaSPI详解</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/10/30
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/Java/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Java
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Java/" style="color: #ffa2c4">
+                    Java
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/SPI/" style="color: #ff7d73">
+                    SPI
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <hr>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98">一个问题</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFSPI">什么是SPI</a></li>
+<li><a href="#API-%E4%B8%8E-SPI">API 与 SPI</a></li>
+<li><a href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90">一个简单的例子</a></li>
+<li><a href="#SPI%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0">SPI机制的实现</a></li>
+<li><a href="#Java-SPI%E7%9A%84%E9%97%AE%E9%A2%98">Java SPI的问题</a></li>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88SPI%E6%9C%BA%E5%88%B6%E6%89%93%E7%A0%B4%E4%BA%86%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B-%EF%BC%9F%EF%BC%9F">为什么SPI机制打破了双亲委派模型</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<hr>
+<h2 id="一个问题"><a href="#一个问题" class="headerlink" title="一个问题"></a>一个问题</h2><p>在项目开发中，经常会使用到数据库驱动，我们连接的数据库可能是<code>MySQL</code>也有可能是<code>Oracle</code>，但是不管使用什么数据库都是引入数据库驱动配置相应的地址、用户、密码信息就可以使用而不用修改业务代码。</p>
+<p>这是因为在<code>JDK</code>中提供了一个<code>java.sql.Driver</code>接口。各个数据库厂商只需要实现这个接口，当我们引入相应驱动，连接数据库的时候，就会使用厂商提供的实现，那么又是如何知道厂商实现的类路径的呢？？</p>
+<h2 id="什么是SPI"><a href="#什么是SPI" class="headerlink" title="什么是SPI"></a>什么是SPI</h2><p><code>SPI</code>全名<code>Service Provider interface</code>，翻译过来就是“服务提供接口”，再说简单就是提供某一个服务的接口， 提供给服务开发者或者服务生产商来进行实现。<br><code>Java SPI</code> 是<code>JDK</code>内置的一种动态加载扩展点的实现。<br>这个机制在一般的业务代码中很少用到（个人接触到的业务没有用到过），但是再底层框架中却被大量使用，包括<code>JDBC</code>、<code>Dubbo</code>、<code>Spring</code>框架、日志接口中都有用到，不同的是有的使用<code>Java</code>原生的实现，有的框架则自己实现了一套<code>SPI</code>机制</p>
+<h2 id="API-与-SPI"><a href="#API-与-SPI" class="headerlink" title="API 与 SPI"></a>API 与 SPI</h2><p><code>API</code> 全称<code>Application Programming Interface</code>， 翻译为“应用程序接口”，指的是应用程序为外部提供服务的接口，这个接口通常由服务提供者自行开发，定义好接口后很少改动。<code>API</code>与<code>SPI</code>示意图如图1，图2所示<br><img src="/2022/10/java/JavaSPI%E8%AF%A6%E8%A7%A3/JavaSPI%E8%AF%A6%E8%A7%A3/API%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="API示意图"></p>
+<center>图1&nbsp;&nbsp;API示意图</center>>
+
+<p><img src="/2022/10/java/JavaSPI%E8%AF%A6%E8%A7%A3/JavaSPI%E8%AF%A6%E8%A7%A3/SPI%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="SPI示意图"></p>
+<center>图2&nbsp;&nbsp;SPI示意图</center>>
+
+<p>一般应用（模块）之间通过接口进行通讯，服务提供方提供接口并进行实现后，调用方就可以通过调用这个接口拥有服务提供发提供的能力，这个就是<code>API</code><br>当接口是由服务调用方提供，并且由服务提供方进行实现时，服务调用方就可以根据自己的需要选择特定实现，而不用更改业务代码以获取相应的功能，这个就是<code>SPI</code></p>
+<h2 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h2><p>这个功能是向注册中心注册服务的一个示例（过于简单的示例），</p>
+<p>首先定义一个接口<code>Registry</code>, 这个接口只有一个功能，就是向注册中心注册一个服务，但是我现在并不确定我选的是什么注册中心，于是提供了一个统一的接口，由各个厂商进行实现</p>
+<pre><code>package cn.bmilk.chat.spi;
+
+public interface Registry &#123;
+    void  registry(String host, int port);
+&#125;
+</code></pre>
+<p>厂商实现好后，需要在其<code>META-INF/services</code>文件夹下新增一个文件，文件名为该接口的全限定名即：<code>cn.bmilk.chat.spi.Registry</code>, 内容为接口实现的全限定名，这里我写了两个</p>
+<pre><code>cn.bmilk.chat.spi.EurekaRegistry
+cn.bmilk.chat.spi.ZookeeperRegistry
+</code></pre>
+<p>两个类的都是空实现，内容如下</p>
+<pre><code>    @Override
+    public void registry(String host, int port) &#123;
+        System.out.println(this + &quot;registry , host = &quot; + host +&quot;  port = &quot; + port);
+    &#125;
+</code></pre>
+<p>下面编写测试主类，通过 <code>ServiceLoader</code> 加载 <code>Registry</code> 实现</p>
+<pre><code>public class MainTest &#123;
+
+    public static void main(String[] args) &#123;
+
+        ServiceLoader&lt;Registry&gt; load = ServiceLoader.load(Registry.class);
+        Iterator&lt;Registry&gt; iterator = load.iterator();
+        while (iterator.hasNext())&#123;
+            Registry registry = iterator.next();
+            registry.registry(&quot;127.0.0.1&quot;, 10086);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>运行结果</p>
+<pre><code>class cn.bmilk.chat.spi.EurekaRegistry
+cn.bmilk.chat.spi.EurekaRegistry@12a3a380registry , host = 127.0.0.1  port = 10086
+class cn.bmilk.chat.spi.ZookeeperRegistry
+cn.bmilk.chat.spi.ZookeeperRegistry@29453f44registry , host = 127.0.0.1  port = 10086
+</code></pre>
+<p>从运行结果中可以看到<code>EurekaRegistry</code>和<code>ZookeeperRegistry</code>都被实例化并且生成相应的对象。但是我们全程并没有显示的加载和生成<code>EurekaRegistry</code>和<code>ZookeeperRegistry</code>类对象，那么是怎么来的呢？</p>
+<h2 id="SPI机制的实现"><a href="#SPI机制的实现" class="headerlink" title="SPI机制的实现"></a>SPI机制的实现</h2><p><code>SPI</code>机制的核心就是<code>ServiceLoader</code>类。其主要的属性如下：</p>
+<pre><code>    // 指出接口配置文件的位置，也就是为什么要在META-INF/services/下创建接口的全限定名文件的原因
+    private static final String PREFIX = &quot;META-INF/services/&quot;;
+
+    // 正在被加载的类（接口）的class对象
+    private final Class&lt;S&gt; service;
+
+    // 加载使用的类加载器
+    private final ClassLoader loader;
+
+    // 创建 ServiceLoader 时采用的访问控制上下文
+    private final AccessControlContext acc;
+
+    // 缓存已经加载的实现, 按实例化顺序缓存
+    private LinkedHashMap&lt;String,S&gt; providers = new LinkedHashMap&lt;&gt;();
+
+    // The current lazy-lookup iterator
+    private LazyIterator lookupIterator;
+</code></pre>
+<p><code>load()</code>方法的实现如下：</p>
+<pre><code>    public static &lt;S&gt; ServiceLoader&lt;S&gt; load(Class&lt;S&gt; service) &#123;
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        // 使用当前线程的ClassLoader进行加载待加载的实现类
+        return ServiceLoader.load(service, cl);
+    &#125;
+</code></pre>
+<pre><code>    public static &lt;S&gt; ServiceLoader&lt;S&gt; load(Class&lt;S&gt; service,
+                                            ClassLoader loader)
+    &#123;
+        // load 方法本质是创建一个ServiceLoader对象
+        return new ServiceLoader&lt;&gt;(service, loader);
+    &#125;
+</code></pre>
+<pre><code>    // new ServiceLoader&lt;&gt;(service, loader)的实现
+    private ServiceLoader(Class&lt;S&gt; svc, ClassLoader cl) &#123;
+        service = Objects.requireNonNull(svc, &quot;Service interface cannot be null&quot;);
+        loader = (cl == null) ? ClassLoader.getSystemClassLoader() : cl;
+        acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
+        reload();
+    &#125;
+</code></pre>
+<pre><code>    public void reload() &#123;
+        providers.clear();
+        // 根据接口类型（父类）和类加载器初始化LazyIterator
+        lookupIterator = new LazyIterator(service, loader);
+    &#125;
+
+    private LazyIterator(Class&lt;S&gt; service, ClassLoader loader) &#123;
+            this.service = service;
+            this.loader = loader;
+        &#125;
+</code></pre>
+<p>跟踪<code>load()</code>方法发现其本质是创建了一个<code>ServiceLoader</code>对象，其共有两个参数，分别是代加载的类父类（接口）<code>Class</code>类对象和类加载器。在构造方法中完成了两件事，一个是变量赋值，一个是调用<code>reload()</code>方法。<code>reload()</code>方法则根据接口类型（父类）和类加载器初始化<code>LazyIterator</code></p>
+<p>当执行<code>ServiceLoader#iterator()</code>时，会创建<code>java.util.Iterator</code>匿名内部类实现:</p>
+<pre><code>    public Iterator&lt;S&gt; iterator() &#123;
+        return new Iterator&lt;S&gt;() &#123;
+
+            Iterator&lt;Map.Entry&lt;String,S&gt;&gt; knownProviders
+                = providers.entrySet().iterator();
+
+            public boolean hasNext() &#123;
+                if (knownProviders.hasNext())
+                    return true;
+                return lookupIterator.hasNext();
+            &#125;
+
+            public S next() &#123;
+                if (knownProviders.hasNext())
+                    return knownProviders.next().getValue();
+                return lookupIterator.next();
+            &#125;
+
+            public void remove() &#123;
+                throw new UnsupportedOperationException();
+            &#125;
+
+        &#125;;
+    &#125;
+</code></pre>
+<p>当执行<code>hasNext()</code> 方法时，会先去<code>providers </code>查找已经加载的缓存实现，如果不存在，则会继续调用<code>LazyIterator#hasNext()</code>用于发现尚未加载的实现，最后的实现在<code>LazyIterator#hasNextService()</code>中</p>
+<p><code>LazyIterator</code>的关键属性</p>
+<pre><code>// 缓存所有需要查找jar包（文件）路径，
+Enumeration&lt;URL&gt; configs = null;
+// 缓存所有被查找到的实现类全限定名
+Iterator&lt;String&gt; pending = null;
+// 迭代器使用，下一个需要被加载的类全限定名
+String nextName = null;
+</code></pre>
+<p><code>hasNextService()</code>实现核心如下：</p>
+<pre><code>// 获取所由需要扫描的包路径
+configs = loader.getResources(fullName);
+// 循环扫描configs中所有的包路径，解析META-INF/services中的指定文件（上例中的cn.bmilk.chat.spi.Registry文件）
+// 
+while ((pending == null) || !pending.hasNext()) &#123;
+    if (!configs.hasMoreElements()) &#123;
+        return false;
+    &#125;
+    // pending缓存了所有查找到的类全限定名
+    pending = parse(service, configs.nextElement());
+&#125;
+</code></pre>
+<p>在知道是否存在接口的实现后，就是通过<code>next()</code>方法获取实现，核心功能由<code>nextService()</code>贡献，核心实现如下：</p>
+<pre><code>// 获取一个实现类全限定名
+String cn = nextName;
+// 加载这个类
+Class&lt;?&gt; c = Class.forName(cn, false, loader);
+// 使用反射创建对象
+c.newInstance()
+</code></pre>
+<p><code>hasNextService()</code>完成堆配置文件的读取，<code>nextService()</code>完成类的加载和对象的创建，这个一切都没有在<code>ServiceLoader</code>创建时完成，这也是体现了延迟<code>Lazy</code>的一个含义</p>
+<h4 id="load-与loadInstalled"><a href="#load-与loadInstalled" class="headerlink" title="load()与loadInstalled()"></a>load()与loadInstalled()</h4><p><code>loadInstalled()</code>和<code>load()</code>一样，本质都是创建了一个<code>ServiceLoader</code>d对象，不同点是使用的加载器不同，<code>load()</code>使用的是<code>Thread.currentThread().getContextClassLoader()</code>当前线程的上下文加载器， <code>loadInstalled()</code>使用的是<code>ExtClassLoader</code>加载器来加载</p>
+<p>具体实现如下：</p>
+<pre><code>    public static &lt;S&gt; ServiceLoader&lt;S&gt; loadInstalled(Class&lt;S&gt; service) &#123;
+        ClassLoader cl = ClassLoader.getSystemClassLoader();
+        ClassLoader prev = null;
+        while (cl != null) &#123;
+            prev = cl;
+            cl = cl.getParent();
+        &#125;
+        return ServiceLoader.load(service, prev);
+    &#125;
+
+</code></pre>
+<p>使用这个方法将只扫描<code>JDK</code>安装目录<code>jre/lib/ext</code>下的<code>jar</code>包中指定的实现，我们应用程序类路径下的实现将会被忽略掉</p>
+<h2 id="Java-SPI的问题"><a href="#Java-SPI的问题" class="headerlink" title="Java SPI的问题"></a>Java SPI的问题</h2><ul>
+<li><code>Java SPI</code>虽然使用了懒加载机制，但是其获取一个实现时，需要使用迭代器循环加载所有的实现类</li>
+<li>当需要某一个实现类时，需要通过循环一遍来获取</li>
+</ul>
+<p>这个两个问题，在<code>Dubbo</code>实现自己的<code>SPI</code>机制时进行了增强，可以仅加载自己想要的扩展实现。</p>
+<h2 id="为什么SPI机制打破了双亲委派模型-？？"><a href="#为什么SPI机制打破了双亲委派模型-？？" class="headerlink" title="为什么SPI机制打破了双亲委派模型 ？？"></a>为什么SPI机制打破了双亲委派模型 ？？</h2><p>想不明白  说不清楚，想明白再补充</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://dongzl.github.io/2021/01/16/04-Java-Service-Provider-Interface/">Java SPI 使用及原理分析</a></li>
+</ul>
+<hr>
+<p><font color="#FF3030">转载请标明出处</font></p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>
