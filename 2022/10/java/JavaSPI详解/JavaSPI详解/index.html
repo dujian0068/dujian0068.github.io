@@ -199,7 +199,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/SPI/" style="color: #ff7d73">
+                <a href="/tags/SPI/" style="color: #00a596">
                     SPI
                 </a>
             </span>
@@ -224,10 +224,10 @@
 <h2 id="一个问题"><a href="#一个问题" class="headerlink" title="一个问题"></a>一个问题</h2><p>在项目开发中，经常会使用到数据库驱动，我们连接的数据库可能是<code>MySQL</code>也有可能是<code>Oracle</code>，但是不管使用什么数据库都是引入数据库驱动配置相应的地址、用户、密码信息就可以使用而不用修改业务代码。</p>
 <p>这是因为在<code>JDK</code>中提供了一个<code>java.sql.Driver</code>接口。各个数据库厂商只需要实现这个接口，当我们引入相应驱动，连接数据库的时候，就会使用厂商提供的实现，那么又是如何知道厂商实现的类路径的呢？？</p>
 <h2 id="什么是SPI"><a href="#什么是SPI" class="headerlink" title="什么是SPI"></a>什么是SPI</h2><p><code>SPI</code>全名<code>Service Provider interface</code>，翻译过来就是“服务提供接口”，再说简单就是提供某一个服务的接口， 提供给服务开发者或者服务生产商来进行实现。<br><code>Java SPI</code> 是<code>JDK</code>内置的一种动态加载扩展点的实现。<br>这个机制在一般的业务代码中很少用到（个人接触到的业务没有用到过），但是再底层框架中却被大量使用，包括<code>JDBC</code>、<code>Dubbo</code>、<code>Spring</code>框架、日志接口中都有用到，不同的是有的使用<code>Java</code>原生的实现，有的框架则自己实现了一套<code>SPI</code>机制</p>
-<h2 id="API-与-SPI"><a href="#API-与-SPI" class="headerlink" title="API 与 SPI"></a>API 与 SPI</h2><p><code>API</code> 全称<code>Application Programming Interface</code>， 翻译为“应用程序接口”，指的是应用程序为外部提供服务的接口，这个接口通常由服务提供者自行开发，定义好接口后很少改动。<code>API</code>与<code>SPI</code>示意图如图1，图2所示<br><img src="/2022/10/java/JavaSPI%E8%AF%A6%E8%A7%A3/JavaSPI%E8%AF%A6%E8%A7%A3/API%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="API示意图"></p>
+<h2 id="API-与-SPI"><a href="#API-与-SPI" class="headerlink" title="API 与 SPI"></a>API 与 SPI</h2><p><code>API</code> 全称<code>Application Programming Interface</code>， 翻译为“应用程序接口”，指的是应用程序为外部提供服务的接口，这个接口通常由服务提供者自行开发，定义好接口后很少改动。<code>API</code>与<code>SPI</code>示意图如图1，图2所示<br><img src="/2022/10/java/JavaSPI%E8%AF%A6%E8%A7%A3/JavaSPI%E8%AF%A6%E8%A7%A3/API%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="API示意图"><span class="image-caption">API示意图</span></p>
 <center>图1&nbsp;&nbsp;API示意图</center>>
 
-<p><img src="/2022/10/java/JavaSPI%E8%AF%A6%E8%A7%A3/JavaSPI%E8%AF%A6%E8%A7%A3/SPI%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="SPI示意图"></p>
+<p><img src="/2022/10/java/JavaSPI%E8%AF%A6%E8%A7%A3/JavaSPI%E8%AF%A6%E8%A7%A3/SPI%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="SPI示意图"><span class="image-caption">SPI示意图</span></p>
 <center>图2&nbsp;&nbsp;SPI示意图</center>>
 
 <p>一般应用（模块）之间通过接口进行通讯，服务提供方提供接口并进行实现后，调用方就可以通过调用这个接口拥有服务提供发提供的能力，这个就是<code>API</code><br>当接口是由服务调用方提供，并且由服务提供方进行实现时，服务调用方就可以根据自己的需要选择特定实现，而不用更改业务代码以获取相应的功能，这个就是<code>SPI</code></p>

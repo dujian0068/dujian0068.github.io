@@ -199,7 +199,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%B7%A5%E4%BD%9C/" style="color: #03a9f4">
+                <a href="/tags/%E5%B7%A5%E4%BD%9C/" style="color: #ff7d73">
                     工作
                 </a>
             </span>
@@ -235,7 +235,7 @@
 <h2 id="什么是短链服务"><a href="#什么是短链服务" class="headerlink" title="什么是短链服务"></a>什么是短链服务</h2><p>短链生成算法的核心目标是将一个长URL转换为一个短且唯一的标识符（短链），并且当访问这个较短的链接时候又能正常访问到长链接对应的内容，即为短链服务。所以这里面<br>会包含两部分内容：</p>
 <ol>
 <li>将长连接转换成短链接提供给用户</li>
-<li>用户访问短链接时将短链重定向到长链接的内容<br>短链的访问过程如下图<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BF%E9%97%AE%E8%BF%87%E7%A8%8B.jpg" alt="短链访问过程"></li>
+<li>用户访问短链接时将短链重定向到长链接的内容<br>短链的访问过程如下图<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BF%E9%97%AE%E8%BF%87%E7%A8%8B.jpg" alt="短链访问过程"><span class="image-caption">短链访问过程</span></li>
 </ol>
 <h4 id="系统功能点"><a href="#系统功能点" class="headerlink" title="系统功能点"></a>系统功能点</h4><p>那么短链服务需要哪些功能呢，我总结如下：</p>
 <ol>
@@ -276,7 +276,7 @@
 <h2 id="生成算法"><a href="#生成算法" class="headerlink" title="生成算法"></a>生成算法</h2><p>短链系统有很重要的一环就是生成算法，生成算法决定了生成的效率（生成性能）、实现复杂度以及是否可以被逆向分析。</p>
 <h4 id="Hash函数与UUID"><a href="#Hash函数与UUID" class="headerlink" title="Hash函数与UUID"></a>Hash函数与UUID</h4><p><code>Hash</code>时最简单最快的实现方案，通常是将长<code>URL</code>利用某种哈希算法进行哈希计算， 然后将结果进行<code>Base64</code>编码，再截取前6位就是短链。</p>
 <p>理想很丰满，现实很骨感，这样得到的短链很有可能会发生<code>哈希冲突</code>, 将长链计算出的哈希值是一样的（也有可能不一样，但是经过<code>Base64</code>编码后前6位一样）。<br>所以在生成短链的时候需要校验该短链是都已经映射到其他长链。如果有则需要重新计算（更换哈希算法或者截取<code>Base64</code>编码后的不同位置）。但是这样会随着时间数据量的<br>增大校验的数据越来越多，导致创建效率变慢。算法推荐使用<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Murmur%E5%93%88%E5%B8%8C">MurmurHash</a>算法，可以一定程度上降低冲突概率。</p>
-<p>与此相对应的还有直接使用<code>UUID</code>前6位作为短链的，同样的会产生冲突的问题。<br>总体流程图如下：<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Hash%E5%92%8CUUID.png" alt="Hash函数与UUID流程"></p>
+<p>与此相对应的还有直接使用<code>UUID</code>前6位作为短链的，同样的会产生冲突的问题。<br>总体流程图如下：<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Hash%E5%92%8CUUID.png" alt="Hash函数与UUID流程"><span class="image-caption">Hash函数与UUID流程</span></p>
 <h4 id="分布式唯一ID与时间戳"><a href="#分布式唯一ID与时间戳" class="headerlink" title="分布式唯一ID与时间戳"></a>分布式唯一ID与时间戳</h4><p>分布式唯一ID的方式分为两步i：</p>
 <ol>
 <li>获取一个唯一ID</li>
@@ -284,11 +284,11 @@
 </ol>
 <p>分布式唯一ID也是有很多的算法，例如数据库自增ID、redis自增ID、发号器等等，这些方式都有很强的规律性，当获用户取到一个短链之后，<br>很容易根据一个短链预测出其他短链并访问，因此如果有<strong>不可猜测</strong>需求的场景应当避免使用。</p>
 <p>还有一种方式是雪花算法得到唯一ID， 如果在短时间内产生一批短链，雪花ID也是可以被预测的，但如果生成的时间不集中， <strong>可猜测</strong>这个问题似乎就可以被<strong>掩盖</strong><br>同样道理的还有使用时间戳。只要生成时间不集中，可预测的问题就会被掩盖。我们使用的就是时间戳，我们系统要十天半个月才会生成一次短链给用户推广营销短信。<br>我们使用秒级时间戳，并且对时间戳做一定的处理避免长度超过6位（将当前时间戳减去一个基准时间戳），这样来看我们的短链会随着时间流逝用完，不过那也是几百年后的事情。</p>
-<p>如果真有秒级时间内生成多个短链的需求怎么办呢，只需要在生成后加一个校验即可，如果冲突再重新生成<br>总体流程图如下：<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%88%86%E5%B8%83%E5%BC%8FID.png" alt="分布式唯一ID与时间戳"></p>
+<p>如果真有秒级时间内生成多个短链的需求怎么办呢，只需要在生成后加一个校验即可，如果冲突再重新生成<br>总体流程图如下：<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%88%86%E5%B8%83%E5%BC%8FID.png" alt="分布式唯一ID与时间戳"><span class="image-caption">分布式唯一ID与时间戳</span></p>
 <h4 id="预生成短链"><a href="#预生成短链" class="headerlink" title="预生成短链"></a>预生成短链</h4><p>面对大规模的短链请求时，一种可行的方案时<strong>预生成</strong>， 即提前计算好要生成多少短链，并在这个基础上提供一定的冗余，存储在某个地方，在需要的时候直接获取即可。<br>预生成的方式为使用随机数，先在0~63的范围内生成随机数，再根据编码表转换成短链，然后判断短链是否存在， 如果存在这重新生成。这似乎和<code>Hash</code>一样会产生冲突并引发性能问题。<br>但预生成的核心就在<strong>预</strong>字上面， 我们可以提前生成一批短链，这个过程和对外提供短链服务的过程是隔离的，我们甚至可以在上线前就预生成好短链，并且按照一定时间加载到短链服务中。</p>
 <p>这里使用布隆过滤器判断短链是否存在，<br>使用文件服务器存储预加载的短链，<br>预生成过程如下图</p>
-<p><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E9%A2%84%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B.png" alt="预生成过程"></p>
-<p>完整时序图如下：<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E9%A2%84%E7%94%9F%E6%88%90%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE.jpg" alt="预生成时序图"></p>
+<p><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E9%A2%84%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B.png" alt="预生成过程"><span class="image-caption">预生成过程</span></p>
+<p>完整时序图如下：<br><img src="/2023/12/design/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%9F%AD%E9%93%BE%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E9%A2%84%E7%94%9F%E6%88%90%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE.jpg" alt="预生成时序图"><span class="image-caption">预生成时序图</span></p>
 <h2 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h2><h4 id="Base64编码中的”-”和”-“"><a href="#Base64编码中的”-”和”-“" class="headerlink" title="Base64编码中的”+”和”&#x2F;“"></a>Base64编码中的”+”和”&#x2F;“</h4><p><code>Base64</code>编码中有两个特殊字符<code>+</code>和<code>/</code>，在<code>URL</code>的编码中会被编码为<code>%2B</code>和<code>%2F</code>， 并且<code>%</code>在写入数据库中时可能会和<code>SQL</code>编码规则冲突，因此直接使用标准的<br><code>Base64</code>编码并不合适，我们应该避开<code>URL</code>保留字符编码， 因此我们将<code>+</code>替换为<code>-</code>， 将<code>/</code>和<code>_</code>。</p>
 <h4 id="如何多次将同一个长链映射为同一个短链"><a href="#如何多次将同一个长链映射为同一个短链" class="headerlink" title="如何多次将同一个长链映射为同一个短链"></a>如何多次将同一个长链映射为同一个短链</h4><p>这个其实是一个选择问题，是不是同一个短链并不是很重要， 因为整个业务目标是打开长链对应的地址，我们可以是多个短链对应一个长链。<br>但是我们还是会去想在一定程度内保证只有一个短链。因此我们选择将长链到短链的映射存储在<code>redis</code>中一份，当<code>redis</code>中没有时就认为长链没有映射到短链，可以重新生成，<br><code>redis</code>中的数据保存7天，一般情况下， 我们一个活动大概时14天，存储7天长链到短链的映射足够了。当然也可以去数据库中判断是否存在这个映射关系，在数据量大、<br>并发高的时候会性能问题，需要综合考虑。</p>
 <h4 id="为什么选择Base64而不是Base62"><a href="#为什么选择Base64而不是Base62" class="headerlink" title="为什么选择Base64而不是Base62"></a>为什么选择Base64而不是Base62</h4><p><code>Base64</code>相较于<code>Base62</code>有一个好处就是64刚好是2的6次方，对应2进制6位，计算编码的时候星能略好于<code>Base62</code>。</p>

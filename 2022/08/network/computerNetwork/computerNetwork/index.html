@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>计算机网络基础 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>计算机网络基础</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/8/23
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/network/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                network
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/network/" style="color: #03a9f4">
+                    network
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E5%8D%8F%E8%AE%AE%E5%88%86%E5%B1%82%E4%B8%8E%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B">协议分层与网络模型</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E5%B1%82">应用层</a></li>
+<li><a href="#%E4%BC%A0%E8%BE%93%E5%B1%82">传输层</a></li>
+<li><a href="#%E7%BD%91%E7%BB%9C%E5%B1%82">网络层</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82">数据链路层</a></li>
+</ul>
+<h2 id="协议分层与网络模型"><a href="#协议分层与网络模型" class="headerlink" title="协议分层与网络模型"></a>协议分层与网络模型</h2><p>七层网络模型，即开放式系统互联模型（Open System Interconnection Model，缩写：OSI；简称为OSI模型），是由国际化标准组织提出的一种概念模型。<br>该模型将通信系统中的数据流划分为七层，<strong>从上至下</strong>分别为：</p>
+<blockquote>
+<ul>
+<li><strong>应用层</strong>：用户应用程序与网络之间的接口，该层的协议通常由应用开发者自己设计与实现，如：HTTP、FTP</li>
+<li><strong>表示层</strong>：将数据转换为能与接收者的系统兼容的、合适的传输格式，例如：加解密，数据编码</li>
+<li><strong>会话层</strong>：负责维护通信过程中端到端之间的连接，并提供基础的访问验证和会话管理，如：登陆验证，断点续传</li>
+<li><strong>传输层</strong>：负责建立连接，校验数据包错误，为应用进程提供逻辑通信，如：TCP、UDP、socket（端口号）</li>
+<li><strong>网络层</strong>：为数据在节点之间的传输建立逻辑链路，并进行数据分组转发。路由器、三层交换机工作在这一层，IP协议也工作在这一层</li>
+<li><strong>链路层</strong>：负责网络寻址，在通信实体之间建立数据链路连接，(二层)交换机在这一层工作。平时这一层可以分为两个子层：</li>
+<li>逻辑链路控制层（logical link control，LLC）：&lt;留坑&gt;</li>
+<li>介质访问控制层（Media access control，MAC）：&lt;留坑&gt;</li>
+<li><strong>物理层</strong>：为端到端通信提供原始的比特流的传输，网卡、集线器等工作在这一层。</li>
+</ul>
+</blockquote>
+<p>图1（左）展示了OSI七层模型，相较于OSI七层模型，TCP&#x2F;IP将网络分层将整个网络体系分为五层，分别为：应用层、传输层、<br>网络层、数据链路层、物理层。对比OSI最直观的差异就是没有正式的<strong>会话层</strong>和<strong>表示层</strong>。但<strong>并不是</strong>这两层不重要，而是交给了应用程序的开发者来判断<br>这两层内容是否重要，是否需要实现，如果需要，右应用程序开发者进行实现。图1（右）展示了TCP&#x2F;IP五层模型</p>
+<p><img src="/2022/08/network/computerNetwork/computerNetwork/%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B.png" alt="图1：网络分层模型"><span class="image-caption">图1：网络分层模型</span></p>
+<p><strong>分层的优点</strong>：<br>分层最大的优点是能够进行协议复用，下层协议不用关心上层协议的实现，上层协议可以直接复用下层协议。当上层的协议数据单元（PDU）被传递到下一层时。<br>会进行数据封装（将上层数据当作一个不透的明的整体），并添加本层协议信息（添加头部和尾部），如图2所示：</p>
+<p><img src="/2022/08/network/computerNetwork/computerNetwork/%E6%95%B0%E6%8D%AE%E5%B0%81%E8%A3%85.png" alt="图2：数据封装与协议复用"><span class="image-caption">图2：数据封装与协议复用</span></p>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><p><strong>应用层协议</strong>定义了运行在不同端系统上上应用程序如何相互传递报文，包括：</p>
+<blockquote>
+<ul>
+<li>交换的报文类型，例如请求报文和请求报文</li>
+<li>各种报文类型的语法，如报文中的各个字段及这些字段时如恶化描述的</li>
+<li>字段的语义，即这个字段中的信息含义</li>
+<li>确定一个进程何时以及如何发送报文，对报文响应的规则</li>
+</ul>
+</blockquote>
+<p>应用层是大多数需要网络的程序通过网络和其他程序通信使用的层，这个层的处理过程是应用特有的。<br>数据在应用内部以特定的格式（编码）在网络上进行传传送。常见的应用层协议有：</p>
+<ul>
+<li><strong>HTTP</strong>：超文本传输协议，主要用于普通文本浏览</li>
+<li><strong>FTP</strong>：文件传输协议，主要用于文件传输</li>
+<li><strong>POP3</strong>：邮局协议，主要用于邮件传送</li>
+<li><strong>DNS</strong>：域名服务，用于网络上主机地址查找</li>
+<li><strong>DHCP</strong>: 动态主机配置协议</li>
+</ul>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>传输层协议为运行在不同主机上的应用进程之间提供了<strong>逻辑通信</strong>功能。运输层将从应用程序接收到的报文进行分组，称之为<strong>报文段</strong>。</p>
+<p>传输层可以提供以下服务：</p>
+<blockquote>
+<ul>
+<li><strong>面向连接的通信</strong>：即在交换数据之前需要建立会话连接，一种逻辑上链接，并不是端到端的电路连接</li>
+<li><strong>正确的交付次序</strong>：即保证接收方接收到的次序和发送发送的顺序相同</li>
+<li><strong>保证数据传输的可靠性</strong>：由于网络本身是不可靠的，保证传输的数据正确是非常必要的，传输协议可以检验数据是否损坏，并通过发送ACK&#x2F;NACK确认消息正确接受；自动重发机制可以用于重新传输丢失或者损坏的数据</li>
+<li><strong>流量控制</strong>：控制两个节点之间数据传输的速率</li>
+<li><strong>拥塞控制</strong>：控制进入到电信网络中的流量</li>
+<li><strong>多路复用</strong></li>
+</ul>
+</blockquote>
+<p>传输层重要的协议：</p>
+<blockquote>
+<ul>
+<li><strong>TCP协议</strong>：传输控制协议</li>
+<li><strong>UDP协议</strong>：用户数据报协议</li>
+<li><strong>DCCP协议</strong>：数据拥塞控制协议</li>
+<li><strong>SCTP</strong>:流控制传输协议</li>
+</ul>
+</blockquote>
+<h4 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h4><p>TCP协议是一个点对点的<strong>面向连接</strong>的协议，也就是说，在两台主机发送数据之前，一定要先建立一条<br>点对点的“连接”。在数据交换结束后需要拆除这个“连接”，这个“连接”是一个虚拟的，逻辑上的连接，并不是FDM&#x2F;TDM那种物理意义上的连接。<br>对于两台主机之间的所有交换路由设备，这种“连接”都是不可见的，它们看到只是数据报。</p>
+<p>建立可拆除连接的过程就是非常著名的<strong>三次握手</strong>和<strong>四次挥手</strong>，由于在数据交换之前需要建立“连接”，在数据交换中要确数据的可靠性交付、拥塞控制等<br>因此TCP协议在传输数据时，有着很多额外的开销，导致数据交换的效率会比较低。</p>
+<p>常见的运行在TCP协议之上的应用层协议有：<code>HTTP</code>、<code>DNS</code>、<code>POP3</code>等等</p>
+<p><img src="/2022/08/network/computerNetwork/computerNetwork/TCP%E6%8A%A5%E5%A4%B4.png" alt="图3：TCP协议报头（图片来源于网络）"><span class="image-caption">图3：TCP协议报头（图片来源于网络）</span></p>
+<h4 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h4><p>既然有面向连接的协议，那么就有<strong>面向无连接</strong>的协议，即UDP协议。UDP协议在数据交换时，无无需建立“连接”，以及关心连接状态，<br>UDP协议相较于TCP协议有着更高的数据交换效率。</p>
+<p>某些应用中更多的希望数据被尽快发送出去，不希望有比较高的延迟，并且可以容忍部分数据的丢失，这种应用和就比较适合使用UDP协议</p>
+<p>常见的运行的UDP协议之上的应用层协议有：<code>DNS</code>、<code>FTP</code>、<code>DHCP</code>等等<br><img src="/2022/08/network/computerNetwork/computerNetwork/UDP%E6%8A%A5%E5%A4%B4.png" alt="图4：UDP协议报头"><span class="image-caption">图4：UDP协议报头</span></p>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>网络层其实做一件非常简单的事情，就是将报文从源主机移动到目标主机，为了完成这一见事，<br>网络层需要具备三个能力：</p>
+<blockquote>
+<ul>
+<li><strong>寻址</strong>：指寻找目标主机在网络中的虚拟地址（IP地址）</li>
+<li><strong>路由</strong>：通过路由选择算法为通过的分组选择最适当的转发路径。</li>
+<li><strong>转发</strong>：当一个分组到达路由器的某一条输入链路时，该路由器必须将该分组移动到适当的输出链路</li>
+</ul>
+</blockquote>
+<p>除此之外，网络层还具有下述功能：</p>
+<blockquote>
+<ul>
+<li><strong>分组与分组交换</strong>：把从传输层接收到的报文段进行封装分组，再传递给链路层</li>
+<li><strong>网络连接复用</strong>：为分组在通信子网中节点之间的传输创建逻辑链路，在一条数据链路上复用多条网络连接(FDM&#x2F;TDM)</li>
+<li><strong>差错检测</strong>：分组中的头部校验和进行差错校验（IPv6去除）</li>
+<li><strong>服务选择</strong>：网络层可为传输层提供数据报和虚电路两种服务，但 Internet的网络层仅为传输层提供数据报一种服务</li>
+</ul>
+</blockquote>
+<p>网络层最有名的协议就是<code>IPv4</code>以及<code>IPv6</code>等IP协议,除此之外还有<code>ARP（地址解析协议）</code>、<br><code>ICMP（因特网控制报文协议）</code>以及<code>IGMP（因特网组管理协议）</code></p>
+<p>图5为<code>IPv4</code>以及<code>IPv6</code>的报头</p>
+<p><img src="/2022/08/network/computerNetwork/computerNetwork/IP%E6%8A%A5%E5%A4%B4.png" alt="图5：IP报头（图片来源于网络）"><span class="image-caption">图5：IP报头（图片来源于网络）</span></p>
+<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><p>数据链路层负责将再网络通信链路中将数据报从一个节点转移到与之相邻的另一个节点，链路层可以提供以下服务（根据协议不同，不一定全部提供）：</p>
+<blockquote>
+<ul>
+<li><strong>成帧</strong>：网络层的数据报在经数据链路传送之前，几乎所有的链路层协议都要将其用链路层帧封装起来</li>
+<li><strong>链路接入</strong>：MAC协议（媒体访问控制协议）规定了帧在链路上传输的规则</li>
+<li><strong>可靠交付</strong>：保证无差错的经链路层移动每个网络层数据报</li>
+<li><strong>差错检测和纠正</strong></li>
+</ul>
+</blockquote>
+<p>链路层的主体部分时在网络适配器（网卡）上实现的，而我们常说的<code>MAC</code>地址就是描述一个物理设备的地址，而并不是所有的硬件都具有这个地址，<br><code>MAC</code>地址通常只存在于网络接入设备上。图6展示了MAC帧的数据结构</p>
+<p><img src="/2022/08/network/computerNetwork/computerNetwork/MAC%E5%B8%A7%E7%BB%93%E6%9E%84.png" alt="图6：MAC帧"><span class="image-caption">图6：MAC帧</span></p>
+<p><strong>备注</strong></p>
+<p>在区域传输的时候使用TCP协议，其他时候使用UDP协议。</p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>

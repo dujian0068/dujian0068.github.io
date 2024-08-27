@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Java/" style="color: #00a596">
+                <a href="/tags/Java/" style="color: #00bcd4">
                     Java
                 </a>
             </span>
@@ -369,7 +369,7 @@ static final class FairSync extends Sync &#123;
         &#125;
     &#125;
 </code></pre>
-<h4 id="Sync同步器"><a href="#Sync同步器" class="headerlink" title="Sync同步器"></a>Sync同步器</h4><p><code>Sync</code>实现了主要的加锁解锁的操作。读写锁同样依赖<code>AQS</code>来实现同步功能，在AQS中由<code>State</code>整型字段代表所数量而这里是两种锁，因此使用位操作来代表不同的锁，<br>使用高16位代表共享锁(读锁)，低16位代表排他锁(写锁)如下图，并且所有与为操有关的事情都在这里完成，<code>AQS</code>中仅提供一些判断接口及队列操作。<br><img src="/2022/08/java/lock/ReentrantReadWriteLock/ReentrantReadWriteLock/%E8%AF%BB%E5%86%99%E9%94%81%E7%8A%B6%E6%80%81.png" alt="读写锁状态"></p>
+<h4 id="Sync同步器"><a href="#Sync同步器" class="headerlink" title="Sync同步器"></a>Sync同步器</h4><p><code>Sync</code>实现了主要的加锁解锁的操作。读写锁同样依赖<code>AQS</code>来实现同步功能，在AQS中由<code>State</code>整型字段代表所数量而这里是两种锁，因此使用位操作来代表不同的锁，<br>使用高16位代表共享锁(读锁)，低16位代表排他锁(写锁)如下图，并且所有与为操有关的事情都在这里完成，<code>AQS</code>中仅提供一些判断接口及队列操作。<br><img src="/2022/08/java/lock/ReentrantReadWriteLock/ReentrantReadWriteLock/%E8%AF%BB%E5%86%99%E9%94%81%E7%8A%B6%E6%80%81.png" alt="读写锁状态"><span class="image-caption">读写锁状态</span></p>
 <p>具体代码解释见注释</p>
 <pre><code class="Java">abstract static class Sync extends AbstractQueuedSynchronizer &#123;
     private static final long serialVersionUID = 6317671515068378041L;

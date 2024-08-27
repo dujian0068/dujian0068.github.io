@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TCP协议详解 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>TCP协议详解</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/8/24
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/network/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                network
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/network/" style="color: #00a596">
+                    network
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/TCP%E5%8D%8F%E8%AE%AE/" style="color: #00bcd4">
+                    TCP协议
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#tcp%E5%8D%8F%E8%AE%AE%E6%8A%A5%E5%A4%B4">TCP协议报头</a></li>
+<li><a href="#%E5%BB%BA%E7%AB%8BTCP%E8%BF%9E%E6%8E%A5%E2%80%94%E2%80%94%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B">建立TCP连接——三次握手</a></li>
+<li><a href="#TCP%E8%BF%9E%E6%8E%A5%E6%8B%86%E9%99%A4%E2%80%94%E2%80%94%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B">TCP连接拆除——四次挥手</a></li>
+</ul>
+<p>在网络基础里面有提到TCP协议是一种面向连接的可靠的传输协议，那么本文主要介绍TCP协议是如何实现连接及可靠性传输的。</p>
+<h2 id="TCP协议报头"><a href="#TCP协议报头" class="headerlink" title="TCP协议报头"></a>TCP协议报头</h2><p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/TCP%E6%8A%A5%E5%A4%B4.png" alt="图1：TCP报头"><span class="image-caption">图1：TCP报头</span></p>
+<p><code>TCP</code>协议的报头如图1所示，标准长度为20个子节，除非出现可选项，其各个字段的含义如下：</p>
+<blockquote>
+<ul>
+<li><code>Source Port</code>:源端口号</li>
+<li><code>Destination Port</code>:目的端口号。<br>每个TCP头部包含了源和目的端口号，这两个值与IP头部中的源和目的IP地址一起，唯一的标识了一个连接。</li>
+<li><code>Sequence Number</code>:序列号。标识了本次TCP连接所传输的所有应用层数据的一个子节（位置），这个子节是当前报文段的第一个子节（用完了就从0再开始循环）。</li>
+<li><code>Acknowledgment Number</code>：确认号（ACK号）。当一方发出确认号时代表该方已经成功接收对方<code>ACK号-1</code>之前的子节，下一次报文期望收到的时<code>ACK号</code>的子节。这个字段只有在<code>ACK</code>标识位被设置才有效果。</li>
+<li><code>Data Offset</code>:给出了报文头的长度，以4字节为单位，因为只有4位，所以TCP头部长度最大为60子节。</li>
+<li><code>Reserved</code>:保留位6位（新的实现已经时4位，使用了低两位来进行速率控制）</li>
+<li><code>URG</code>:紧急字段，很少使用</li>
+<li><code>ACK</code>:确认标识，启用后（<code>ACK=1</code>时），确认号才有效，连接建立后一般都是启用的</li>
+<li><code>PSH</code>:推送标识，就是催一下发送方尽快发送数据</li>
+<li><code>RST</code>:重置连接。连接取消，一般是因为错误信息</li>
+<li><code>SYN</code>:用于初始化一个连接的同步序列号</li>
+<li><code>FIN</code>:表示该报文段的发送发已经结束向对方发送数据（应用层数据）</li>
+<li><code>Window</code>:表示窗口大小</li>
+<li><code>Checksum</code>:TCP校验和</li>
+<li><code>Urgent Pointer</code>:紧急指针，只有<code>URG</code>字段被启用后才有效</li>
+<li><code>DATA</code>:TCP报文段携带的数据内容，该部分是可选的，比如在连接建立和终止时，报文段就只有TCP头部。</li>
+</ul>
+</blockquote>
+<p>上面说到TCP头部的源和目的端口号，IP协议头部的源和目的Ip地址唯一的标识了一个连接，更加准确的来说一个TCP连接是由一对端点或套接字构成，<br>其中通信对策每一段都由一对<code>IP地址</code>和<code>端口号</code>组成，那么TCP连接具体是怎么建立和拆除的呢？？</p>
+<h2 id="建立TCP连接——三次握手"><a href="#建立TCP连接——三次握手" class="headerlink" title="建立TCP连接——三次握手"></a>建立TCP连接——三次握手</h2><p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="图2：TCP建立连接"><span class="image-caption">图2：TCP建立连接</span></p>
+<p>TCP连接建立过程如图2所示：详细描述如下：</p>
+<blockquote>
+<ol>
+<li>客户端（连接主动发起者）发送一个<code>SYN</code>报文段（即<code>TCP</code>头部<code>SYN</code>字段设置为1），并指明连接的端口号和初始化序列号——<code>ISN(c)</code>，客户端进入<code>SYN_SENT</code>状态。</li>
+<li>服务端（连接被动建立者）收到客户端发送的报文段后需要进行响应，发送自己的<code>SYN</code>报文段，设置<code>ACK</code>为1代表是一个响应报文，同时初始化自己的初始化序列号——<code>ISN(s)</code>，服务端进入<code>SYN_RCVD</code>状态<br>同时为了响应客户端的<code>SYN</code>，服务端会将请求报文中的<code>ISN(c)</code>+1，作为自己的确认序列号<code>ack</code>的值</li>
+<li>为了确认服务器端的<code>SYN</code>报文段，客户端将<code>ISN(s)</code>+1作为自己的确认序列号返回服务端。客户端此时会认为连接成功进入<code>ESTABLISHED</code>状态，<br>服务端在收到客户端的<code>ACK</code>报文后，进入<code>ESTABLISHED</code>状态</li>
+</ol>
+</blockquote>
+<h4 id="抓包分析"><a href="#抓包分析" class="headerlink" title="抓包分析"></a>抓包分析</h4><p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="图3：TCP连接建立——第一次握手"><span class="image-caption">图3：TCP连接建立——第一次握手</span></p>
+<p>第一次握手的TCP请求头如图3所示，其中指明了</p>
+<blockquote>
+<ul>
+<li>源端口号：56117</li>
+<li>目的端口号：8080</li>
+<li>序列号：3722693751</li>
+<li>确认号：0</li>
+<li>连接标志位（SYN）：1 代表这是一个请求连接报文</li>
+<li>窗口大小：65535</li>
+</ul>
+</blockquote>
+<p>当服务端收到客户端发来的第一个连接报文之后，会发送ACK报文来进行应答，并设置确认号为客户端的序列号+1，于是就有了第二次握手，抓包数据如图4所示</p>
+<p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="图4：TCP连接建立——第二次握手"><span class="image-caption">图4：TCP连接建立——第二次握手</span></p>
+<p>第二次握手，服务端将源端口号和目的端口号“对调”，同时确认号（ack）设置为3722693752，并且SYN标志位被设置为1，代表是一个连接报文，ACK标志位设置为1，<br>代表是确认报文。具体确认的信息就是确认号的内容。</p>
+<p>客户端收到来自服务端的应答报文后，会对其进行确认，即第三次握手，详细信息如图5所示<br><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="图5：TCP连接建立——第三次握手"><span class="image-caption">图5：TCP连接建立——第三次握手</span></p>
+<p>注意：此时客户端会完成连接资源的分配，并且第三次握手的报文目的是用于对服务端的连接请求进行应答，所以第三次连接<code>SYN</code>不会被设置</p>
+<h4 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h4><p>Q：如果握手信息丢失会怎样</p>
+<blockquote>
+<ol>
+<li>如果是第一次握手信息丢失，那么服务端就不会收到来自客户端的连接请求，服务端则不会做任何事情，客户端由于收不到服务端的确认信息，会进行重传，重传超过一定次数，客户端会销毁这个连接。<br>重传次数由内核参数<code>net.ipv4.tcp_syn_retries</code>控制，<code>Linux</code>默认为6</li>
+<li>第二次握手丢失，客户端会收不到服务端的确认报文，同时服务端也收不到客户端的第三次握手报文，两边都会进行重传，由于初始序列号是随机的，重传过程中可能会变化</li>
+<li>第三次丢失会复杂一些：如果客户端发送应答报文后，没有发送其他数据，那么服务端由于长时间接收不到来自客户端的应答报文，会进行重发。如果客户端紧接着发送数据，由于发送数据的报文段<br>里面会携带<code>ACK</code>和<code>ack</code>信息，服务端也会进入到连接状态。进行数据接收。</li>
+</ol>
+</blockquote>
+<p>Q：为什么不能二次握手</p>
+<blockquote>
+<p>如果TCP采用两次握手就建立连接，那么服务端就必须在二次握手报文发出的时候认为连接已经建立</p>
+<p>假设由于某种原因，客户端请求很久之后才到达服务端，客户端此时已经关闭了连接，那么服务端就会认为有客户端希望与其建立连接<br>并发出确认连接报文，一直都等待客户端数据到来，而没有客户端真正连接，这样服务端的资源就会被浪费</p>
+</blockquote>
+<h2 id="TCP连接拆除——四次挥手"><a href="#TCP连接拆除——四次挥手" class="headerlink" title="TCP连接拆除——四次挥手"></a>TCP连接拆除——四次挥手</h2><p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="图6：TCP四次挥手"><span class="image-caption">图6：TCP四次挥手</span></p>
+<p>TCP连接拆除过程如图6所示：TCP规定通过发送一个<code>FIN</code>字段来发起关闭操作，详细描述如下：</p>
+<ol>
+<li>客户端（连接主动关闭方）会发送一个<code>FIN</code>段来发起关闭连接请求，同时会携带自己当前的序列号K，另外<code>ack</code>确认号用于确认对方最近一次发来的数据，状态变为<code>FIN_WAIT_1</code></li>
+<li>服务端（被动关闭方）会将K+1作为响应的<code>ack</code>值，表明已经成功接收到客户端的<code>FIN</code>请求，同时上层的应用程序也会被告知对方发起了关闭连接请求，由于此时服务端有可能还存在待发送的数据，服务端不会发送<code>FIN</code>请求。服务端状态变为<code>CLOSE_WAIT</code></li>
+<li>等到服务端数据发送完成后，服务端会发送<code>FIN</code>段，请求关闭连接并进入<code>LASK_ACK</code>状态</li>
+<li>为了关闭连接，客户端还会发送<code>ACK</code>应答，<code>ack=L+1</code>来表示收到了来自服务端的<code>FIN</code>段。如果出现<code>FIN</code>段丢失的情况，那么服务端也就接收不到<code>ACK</code>确认，服务端就会重传<code>FIN</code>段。客户端进入<code>TIME_WAIT</code>状态，等待<code>2MSL</code>。</li>
+</ol>
+<h4 id="抓包分析-1"><a href="#抓包分析-1" class="headerlink" title="抓包分析"></a>抓包分析</h4><p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="图7：TCP连接拆除——第一次挥手"><span class="image-caption">图7：TCP连接拆除——第一次挥手</span></p>
+<p>第一次握手的TCP请求头如图7所示，其中指出来</p>
+<blockquote>
+<ol>
+<li>客户端设置了<code>FIN</code>字段用于标识这是一个关闭连接请求</li>
+<li><code>ack=3002850206</code>对最近一次的数据进行了确认</li>
+<li><code>ACK=1</code>确认标志位</li>
+<li>客户端当前序列号为3722693763</li>
+</ol>
+</blockquote>
+<p>服务端收到客户端的<code>FIN</code>段后进行响应，如图8所示。服务端使用<code>ack=3722693764</code>来对客户端的<code>FIN</code>段进行应答<br><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="图8：TCP连接拆除——第二次挥手"><span class="image-caption">图8：TCP连接拆除——第二次挥手</span></p>
+<p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="图9：TCP连接拆除——第三次挥手"><span class="image-caption">图9：TCP连接拆除——第三次挥手</span></p>
+<p>由于服务端在对客户端的<code>FIN</code>段响应后，没有额外数据发送，因此直接发送了服务端的<code>FIN</code>段，如图9所示。<br>其中<code>FIN</code>被设置，<code>ack</code>和<code>seq</code>没有变化，因为服务端和客户端都没有再发送数据。</p>
+<p>客户端收到服务端的<code>FIN</code>段后，进行响应，<code>ack=3002850207</code>，如图10所示</p>
+<p><img src="/2022/08/network/TCP/TCP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/%E7%AC%AC%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="图10：TCP连接拆除——第四次挥手"><span class="image-caption">图10：TCP连接拆除——第四次挥手</span></p>
+<h4 id="一些问题-1"><a href="#一些问题-1" class="headerlink" title="一些问题"></a>一些问题</h4><p>Q；最后一次握手后为什么要等待<code>2MSL</code></p>
+<blockquote>
+<p>因为网络是不可靠的，网络无法保证最后一次<code>ACK</code>段会被服务端收到。因此处在<code>LASK_ACK</code>状态下的服务<br>端可能会因为超时未收到<code>ACK</code>而重发<code>FIN</code>段，<br>这个<code>2MSL</code>就是用来重发可能丢失的<code>ACK</code>段的</p>
+<p>也有可能关闭连接后立马又打开新的连接复用同一套<code>socket</code>，等待足够长的事件可以防止和第二次连接搞混</p>
+</blockquote>
+<p>Q：如果挥手信息丢失会怎样</p>
+<ol>
+<li>如果第一次挥手信息丢失，客户端长时间收不到服务端的确认信息，会进行重发，重发次数由内核参数<code>net.ipv4.tcp_orphan_retries </code>控制，重发次数超过设定值后，就会直接进入<code>CLOSE</code>状态</li>
+<li>如果是第二次挥手信息丢失，客户端也会因为长时间收不到服务端的确认信息进行重发</li>
+<li>如果客户端的长时间没有收到服务端的第三次挥手信息，客户端会直接关闭连接，等待事件由内核参数<code>net.ipv4.tcp_fin_timeout</code>控制</li>
+<li>服务端发送的<code>FIN</code>丢失，服务端会长时间收不到第四次挥手信息，也会进行重传</li>
+<li>客户端四次挥手后，本可以直接跑路，但是怕服务端没收到消息，会等待一段时间，处理服务端重发的<code>FIN</code></li>
+</ol>
+<p>Q：为什么需要四次挥手而不是三次</p>
+<blockquote>
+<p>关闭连接时，当服务端收到客户端的<code>FIN</code>报文通知时，它仅仅表示客户端没有数据需要发送了，<br>但此时未必服务端就没有数据需要发送给客户端了，所以不会立刻关闭SOCKET,而是将所有数据发送完后，<br>再发送FIN报文给客户端来表示服务端可以关闭连接了，所以它这里的ACK报文和FIN报文多数情况下都是分开发送的</p>
+</blockquote>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>

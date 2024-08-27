@@ -578,6 +578,11 @@ body::-webkit-scrollbar-track {
 .katex {
     white-space: normal !important;
 }
+.image-caption {
+    display: block; /* 使span元素表现得像块级元素 */
+    text-align: center; /* 文本居中 */
+}
+
 .language {
     background: linear-gradient(to right, #ed6ea0 0%, #ec8c69 100%);
     border-radius: 0 0 10px 10px;

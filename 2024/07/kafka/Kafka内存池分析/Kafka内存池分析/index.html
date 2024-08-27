@@ -224,7 +224,7 @@
 <hr>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Kafka Producer</code>中有这样一个参数<code>buffer.memory</code>, 可能在使用<code>Kafka</code>的过程中没有配置过它，这个参数是<code>Kafka Producer</code>调优非常重要的一个参数。</p>
 <p><code>Producer</code>并不是收到消息就将消息发送到<code>Broker</code>上，而是要等到一定的时间(<code>linger.ms</code>参数控制)或者累计到一定大小(<code>batch.size</code>参数控制)再进行发送，<br>在代码中使用<code>ByteBuffer</code>实现， 如果频繁创建或者销毁<code>buffer</code>会带来很大的性能损失， 因此<code>Kafka</code>使用了池化技术来进行管理，称之为缓存池， 缓存池的大小由参数<code>buffer.memory</code>控制。</p>
-<p><img src="/2024/07/kafka/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/BufferPool%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Kafka缓存池示意图"></p>
+<p><img src="/2024/07/kafka/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/BufferPool%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Kafka缓存池示意图"><span class="image-caption">Kafka缓存池示意图</span></p>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h4 id="创建时机"><a href="#创建时机" class="headerlink" title="创建时机"></a>创建时机</h4><p><code>kafkaProducer</code>在初始化的过程中会创建消息记录器<code>RecordAccumulator</code>,在<code>RecordAccumulator</code>构造函数要求传入一个<code>BufferPool</code>对象。具体方法如下</p>
 <pre><code class="Java">// KafkaProducer构造函数中会创建消息累加器
  this.accumulator = new RecordAccumulator(logContext,
@@ -293,7 +293,7 @@ public class BufferPool &#123;
 <li>期望值大于默认大小，如果可分配内存大小大于期望大小则直接分配，否则释放空闲队列直到可分配的内存大小大于期望大小再进行分配</li>
 <li>期望值小于默认大小：  不可能</li>
 </ul>
-<p>流程图如下：<br><img src="/2024/07/kafka/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/BufferPool%E5%88%86%E9%85%8D%E6%B5%81%E7%A8%8B.png" alt="BufferPool分配ByteBuffer流程"></p>
+<p>流程图如下：<br><img src="/2024/07/kafka/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/Kafka%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%86%E6%9E%90/BufferPool%E5%88%86%E9%85%8D%E6%B5%81%E7%A8%8B.png" alt="BufferPool分配ByteBuffer流程"><span class="image-caption">BufferPool分配ByteBuffer流程</span></p>
 <p>详细代码如下：</p>
 <pre><code class="Java">/**
      * Allocate a buffer of the given size. This method blocks if there is not enough memory and the buffer pool
