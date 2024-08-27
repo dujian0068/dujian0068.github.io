@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>白盒测试 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>白盒测试</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2020/12/2
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/Log/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Log
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Log/" style="color: #00bcd4">
+                    Log
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%97%A5%E5%BF%97/" style="color: #00a596">
+                    日志
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95%E4%BB%8B%E7%BB%8D">白盒测试介绍</a></li>
+<li><a href="#%E5%88%86%E7%B1%BB">分类</a><ul>
+<li><a href="#%E9%9D%99%E6%80%81%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95">静态白盒测试</a></li>
+<li><a href="#%E5%8A%A8%E6%80%81%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95">动态白盒测试</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E8%A6%86%E7%9B%96%E8%A6%81%E6%B1%82">测试覆盖要求</a><ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E8%A6%86%E7%9B%96">数据覆盖</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96">代码覆盖</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="白盒测试介绍"><a href="#白盒测试介绍" class="headerlink" title="白盒测试介绍"></a>白盒测试介绍</h2><ol>
+<li><p>白盒测试（white-box-testing）又称之为透明盒测试（glass box testing）、结构测试（structural testing）等，软件测试的主要方法之一，也称之为结构测试、逻辑驱动测试或基于程序本身的测试。<br>目标是测试程序内部的结构或者运作，而不是程序本身的功能（黑盒测试）。</p>
+</li>
+<li><p>在百合测试时，一程序语言的角度来设计测试案例。测试者了解待测试的程序本身的内部结构、算法等信息。测试者输入资料然后验证资料流在程序中的流通路径。并确定适当的输出结果。</p>
+</li>
+<li><p>应用。白盒测试可以应用于单元测试、整合测试。</p>
+</li>
+<li><p>白盒测试设计技术包括以下代码覆盖标准（覆盖率从低到高排序）：</p>
+<ul>
+<li>语句覆盖</li>
+<li>判定覆盖</li>
+<li>条件覆盖</li>
+<li>判定&#x2F;条件覆盖</li>
+<li>条件组合覆盖</li>
+<li>路径覆盖</li>
+</ul>
+</li>
+<li><p>测试原则</p>
+<ul>
+<li>保证被测模块中所有的路径至少被测试一次</li>
+<li>所有的逻辑值都要测试true和false两种情况</li>
+<li>检查程序中的内部数据结构是否有效</li>
+<li>检查上下边界及可操作范围内运行所有循环</li>
+</ul>
+</li>
+<li><p>如何执行：</p>
+<ol>
+<li>理解源代码</li>
+<li>创建测试用例并执行</li>
+</ol>
+</li>
+<li><p>优势：</p>
+<ul>
+<li>可以揭示隐藏的错误进行代码优化，可以消除可能存在的缺陷</li>
+<li>白盒测试可以轻松实现自动化</li>
+<li>从源代码层面测试提供了可追溯性，简化了软件改动带来的测试改动</li>
+<li>通常测试会涵盖所有的代码路径，测试的会更加彻底，单元测试可以做到100%的代码覆盖率</li>
+</ul>
+</li>
+<li><p>劣势：</p>
+<ul>
+<li>白盒测试很复杂，因此测试人员必须有编程知识，根据测试层面的复杂性，白盒测试可能需要知识水平更高的人员</li>
+<li>白盒测试关注于当前已经存在软件，可能无法发现遗漏的功能</li>
+<li>在某些情况下，要测试程序中所有的可能情况是不现实的，因此会有一些未被测试的情况</li>
+</ul>
+</li>
+</ol>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="静态白盒测试"><a href="#静态白盒测试" class="headerlink" title="静态白盒测试"></a>静态白盒测试</h3><p>静态测试是指不运行程序，通过人工对于程序和文档进行分析和检查，简单来说，静态白盒测试就是通过人工看代码找bug。</p>
+<p>进行静态白盒测试的首要原因是今早发现软件缺陷，以找出动态黑盒测试难以发现或者隔离的软件缺陷。</p>
+<p>进行静态白盒测试的另一个好处是为黑盒测试员在接受软件进行测试设计测试用例时提供思路</p>
+<h4 id="代码审查清单"><a href="#代码审查清单" class="headerlink" title="代码审查清单"></a>代码审查清单</h4><ul>
+<li>数据引用错误：数据引用错误，是指未经正确声明和初始化的变量，常量，数组，字符串或记录，而导致的软件缺陷</li>
+<li>除了数据引用错误，还有数据声明错误、计算错误、比较错误、控制流程错误、子程序参数错误、输入输出错误。</li>
+</ul>
+<h3 id="动态白盒测试"><a href="#动态白盒测试" class="headerlink" title="动态白盒测试"></a>动态白盒测试</h3><p>动态白盒测试也称之为结构化测试。利用查看代码功能（作什么）和实现方式（怎么做）得到的信息来确定那些需要测试、哪些不需要测试、如何展开测试。</p>
+<p>动态白盒测试包括以下四个部分：</p>
+<ul>
+<li>直接测试底层函数、过程、子程序和库。</li>
+<li>以完整程序的方式从顶层测试软件，但是根据对软件运行的了解调整测试用例</li>
+<li>从软件获得读取变量和状态信息的访问权，以便确定测试与预期结果是否相符，同时，强制软件已正常测试难以实现的方式运行。</li>
+<li>估算执行测试时“命中”的代码量和具体代码，然后调整测试，去掉多余的测试用例，补充一楼的用例。</li>
+</ul>
+<h2 id="测试覆盖要求"><a href="#测试覆盖要求" class="headerlink" title="测试覆盖要求"></a>测试覆盖要求</h2><h3 id="数据覆盖"><a href="#数据覆盖" class="headerlink" title="数据覆盖"></a>数据覆盖</h3><h4 id="数据流覆盖"><a href="#数据流覆盖" class="headerlink" title="数据流覆盖"></a>数据流覆盖</h4><p>数据流覆盖主要指在软件中完全跟踪一批数据。在单元测试中，数据仅仅通过了一个模块或者函数。同样的跟踪方式可能用于多个集成模块，甚至整个软件产品。如果在底层测试函数，就会使用调试器观察变量在程序运行时的数据，可以检查变量的中间值。</p>
+<h4 id="次边界"><a href="#次边界" class="headerlink" title="次边界"></a>次边界</h4><h3 id="代码覆盖"><a href="#代码覆盖" class="headerlink" title="代码覆盖"></a>代码覆盖</h3><h4 id="语句覆盖"><a href="#语句覆盖" class="headerlink" title="语句覆盖"></a>语句覆盖</h4><p>语句覆盖又称之为行覆盖、段覆盖、基本块覆盖，是最常见也最常用的一种覆盖方式，测的就是代码有没有执行到这里，每一个可以被执行的语句是否被执行到了。<br>简单地说就是设计一系列的测试用例，运行被测的程序，使得每一可执行语句至少被执行一次。当然为了减少工作量当然测试用例个数越少越好。</p>
+<p>语句覆盖是最容易达到的覆盖，但是却是最弱的覆盖，尽管代码的行数的覆盖达到了100%，但是却没有考虑一些分支、组合、边界等问题。</p>
+<pre><code>public int div(int a, int b)&#123;
+    return a/b;
+&#125;
+</code></pre>
+<p>像简单的除法，代码只有一行，也可以设计<code>a=10,b=1</code>一组简单的测试用例就可以达到100%的行覆盖，但是却隐藏着<code>b=0</code>异常。</p>
+<h4 id="判定覆盖"><a href="#判定覆盖" class="headerlink" title="判定覆盖"></a>判定覆盖</h4><p>判定覆盖是要设计足够多的测试用例，使得程序中的每一个判断至少获取一次true和一次false，即：使得流程图中的每一个真假分支各被执行一次。</p>
+<p>特点：</p>
+<ol>
+<li>满足判定覆盖的测试用例一定满足语句覆盖</li>
+<li>对于判定的最终值进行度量，但是对于判定内部的每一个子表达式的取值未被考虑。</li>
+</ol>
+<pre><code>public void test(int a, int b,int x)&#123;
+    if(a&gt;1 and b=0) &#123;
+        //do 1
+    &#125;
+    if(a=2 || b&gt;2) &#123;
+        //do 2
+    &#125; 
+&#125;
+</code></pre>
+<p>例如上述语句<code>if(a&gt;1 and b=0) </code>只需要判定整个<code>a&gt;1 and b=0</code>执行结果为<code>true</code>或者<code>false</code>;</p>
+<p>判定覆盖包含了语句覆盖</p>
+<h4 id="条件覆盖"><a href="#条件覆盖" class="headerlink" title="条件覆盖"></a>条件覆盖</h4><p>条件覆盖不仅使程序中的每个语句被执行了一次，而且使每个表达式中的每个条件都取到可能的结果。<br>以判定覆盖中的例子为例：</p>
+<ol>
+<li>首先有四个条件<code>a&gt;1、b=0、a=2、b&gt;2</code></li>
+<li>为了达到条件覆盖需要设计足够的测试用例在<code>if(a&gt;1 and b=0)</code>有<code>a&gt;1 、a&lt;=1、b=0、b!=0</code></li>
+<li>在<code>if(a=2 || b&gt;2)</code>有<code>a=2 、a!=2、b&gt;2、b&lt;=2</code></li>
+<li>那么只需要<code>a=2、b=0</code>和<code>a=0、b=3</code>两组测试用例就可以满足</li>
+</ol>
+<p>条件覆盖通常会比判定覆盖强，因为它使得每一个条件都取到两个不同的结果，而判定覆盖不保证这一点。<br>但是判定覆盖和条件覆盖不是包含关系</p>
+<h4 id="判定-条件覆盖"><a href="#判定-条件覆盖" class="headerlink" title="判定&#x2F;条件覆盖"></a>判定&#x2F;条件覆盖</h4><p>判定条件覆盖是设计足够的测试用例，使得判断中每个条件的所有可能值至少执行一次，同时每个判定本身所有可能的结果至少执行一次，缺点是忽略了条件组合的情况。<br>对于条件覆盖所举的例子，是没有覆盖到<code>if(a=2 || b&gt;2)</code>为false的情况的，因此需要加增一组测试用例<code>a=3、b=0</code>。<br>判定-条件覆盖包含了判定覆盖和条件覆盖</p>
+<h4 id="条件组合覆盖"><a href="#条件组合覆盖" class="headerlink" title="条件组合覆盖"></a>条件组合覆盖</h4><p>条件组合判定指得是：执行足够多的测试用例，使得每个判定中条件的各种可能出现的组合都至少出现一次，显然满足条件组合覆盖的测试用例一定满足判定覆盖、条件覆盖、判定&#x2F;条件覆盖</p>
+<h4 id="路径覆盖"><a href="#路径覆盖" class="headerlink" title="路径覆盖"></a>路径覆盖</h4><p>路径覆盖指的是指测试时设计若干个测试用例，然后运行被测程序，要求覆盖到程序中所有可能的路径</p>
+<p>路径覆盖显然是满足条件组合覆盖</p>
+<h4 id="基本路径测试"><a href="#基本路径测试" class="headerlink" title="基本路径测试"></a>基本路径测试</h4><p>详见<a target="_blank" rel="noopener" href="https://blog.bmilk.net2021/01/test/%E5%9F%BA%E6%9C%AC%E8%B7%AF%E5%BE%84%E6%B5%8B%E8%AF%95/">基本路径测试</a></p>
+<hr>
+<p><font color="#FF3030">转载请标明出处</font></p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>
