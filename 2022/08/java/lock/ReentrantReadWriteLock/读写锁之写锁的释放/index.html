@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>读写锁之写锁的释放——doReleaseShared()方法分析 | bmilk</title>
+    <meta name="author" content="Du Jian" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar-link.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--<script type="text/javascript" src="/js/highlight/highlight.js"></script>-->
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+ <link
+     rel="stylesheet"
+     href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+ />
+<!--<link-->
+<!--    rel="stylesheet"-->
+<!--    href="/css/highlight/androidstudio.css"-->
+<!--/>-->
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING...</h2>
+                    <p>起身休息一下吧，比如痛痛快快上个厕所什么的</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>BMILK</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;BMILK</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>读写锁之写锁的释放——doReleaseShared()方法分析</h1>
+    </div>
+    <div class="info">
+        
+            <span class="date">
+                <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                2022/8/15
+            </span>
+        
+
+        
+        <span class="category">
+            <a href="/categories/Java/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Java
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Java/" style="color: #00a596">
+                    Java
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/Lock/" style="color: #00bcd4">
+                    Lock
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E5%86%99%E9%94%81%E9%87%8A%E6%94%BE%E6%BA%90%E7%A0%81">写锁释放源码</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">使用场景</a></li>
+<li><a href="#%E4%BB%A5%E5%86%99%E9%94%81%E5%BC%80%E5%A7%8B%E7%9A%84%E9%98%9F%E5%88%97">以写锁开始的队列</a></li>
+<li><a href="#%E4%BB%A5%E8%AF%BB%E9%94%81%E5%BC%80%E5%A7%8B%E7%9A%84%E9%98%9F%E5%88%97">以读锁开始的队列</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+<h2 id="写锁释放源码"><a href="#写锁释放源码" class="headerlink" title="写锁释放源码"></a>写锁释放源码</h2><p>写锁的释放主要依靠<code>doReleaseShared()</code>方法完成， 具体解析见注释</p>
+<pre><code class="Java">/**
+ * Release action for shared mode -- signals successor and ensures
+ * propagation. (Note: For exclusive mode, release just amounts
+ * to calling unparkSuccessor of head if it needs signal.)
+ */
+private void doReleaseShared() &#123;
+    /*
+     * Ensure that a release propagates, even if there are other
+     * in-progress acquires/releases.  This proceeds in the usual
+     * way of trying to unparkSuccessor of head if it needs
+     * signal. But if it does not, status is set to PROPAGATE to
+     * ensure that upon release, propagation continues.
+     * Additionally, we must loop in case a new node is added
+     * while we are doing this. Also, unlike other uses of
+     * unparkSuccessor, we need to know if CAS to reset status
+     * fails, if so rechecking.
+     */
+    for (;;) &#123;
+        Node h = head;
+        if (h != null &amp;&amp; h != tail) &#123;
+            int ws = h.waitStatus;
+            if (ws == Node.SIGNAL) &#123;
+                if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
+                    continue;            // loop to recheck cases
+                unparkSuccessor(h);
+            &#125;
+            //在队列中的节点对应的线程阻塞之前，将前驱节点的waitStatus状态设置为SIGNAL
+            //所以这块ws==0，其实是当前线程通过第一次循环将状态设置为了0，
+            //第二次循环进入的时候头节点还没有被改变
+            //cas操作失败的话会直接continue，为什么会失败，
+            //可能是唤醒得其他节点在唤醒后续节点的时候已经进行了修改
+            //修改失败则代表头节点已经修改，则进入下一次循环
+            else if (ws == 0 &amp;&amp;
+                     !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))
+                continue;                // loop on failed CAS
+        &#125;
+        //特别注意这个出口判断
+        //唤醒后继节点之后，后继节点没有更换头节点才会退出，整个后继节点可以是一个读锁，或者写锁
+        //在唤醒到队列尾之后头节点将不再改变，可以结束
+        if (h == head)                   // loop if head changed
+            break;
+    &#125;
+&#125;
+</code></pre>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p><code>doReleaseShared()</code>的作用唤醒其后后继节点，具体的说是需要唤醒其后到下一个尝试获取锁的的节点之间的所有尝试获取<br>读锁的线程。</p>
+<p>在<code>AQS</code>中一共有两处使用到了<code>doReleaseShared()</code>方法，分别是：</p>
+<ul>
+<li><p>在<code>setHeadAndPropagate()</code>中，<code>setHeadAndPropagate()</code>方法用于同步等待队列中获取共享锁的节点<br>在成功获取共享锁之后判断其是否有后继节点，以及后继节点是否是尝试获取共享锁，如果是则调用<code>doReleaseShared()</code>完成唤醒操作</p>
+</li>
+<li><p>在<code>releaseShared()</code>中当前线程释放完读锁后，读锁归零则调用<code>doReleaseShared()</code>方法唤醒后及线程</p>
+</li>
+</ul>
+<p>总之来说，<code>doReleaseShared()</code>就是用来唤醒后继节点的，但是这个方法体式一个死循环，而出口条件却不是很好理解；</p>
+<pre><code class="Java">//方法出口
+if (h == head)                   // loop if head changed
+    break;
+</code></pre>
+<p>如何能满足这个条件呢，以读锁为例说明:</p>
+<h2 id="以写锁开始的队列"><a href="#以写锁开始的队列" class="headerlink" title="以写锁开始的队列"></a>以写锁开始的队列</h2><p>假设当前读锁被线程A获取，考虑获取读锁的进入队列的条件，非公平模式下队列中头结点的后继节点尝试获取写锁，则会加入到队列中；<br>公平模式下，队列中有等候的节点就会加入到队列中排队，但是读锁是非阻塞式获取的，当一个线程获取读锁后，<br>其他线程也可以获取读锁，<code>CAS</code>操作放在一个死循环中完成，不会被加入到队列，所以第一个放到队列中的也是一个写锁的获取线程。<br>若当前是写锁被获取，则统统会被加入到队列中。</p>
+<p>假设有这样一个队列(如下图)<br><img src="/2022/08/java/lock/ReentrantReadWriteLock/%E8%AF%BB%E5%86%99%E9%94%81%E4%B9%8B%E5%86%99%E9%94%81%E7%9A%84%E9%87%8A%E6%94%BE/%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9%E6%98%AF%E5%86%99%E9%94%81.png"></p>
+<p>当写锁被获取并刚释放的瞬间，还没有唤醒读锁1，则队列变为下面的样子<br><img src="/2022/08/java/lock/ReentrantReadWriteLock/%E8%AF%BB%E5%86%99%E9%94%81%E4%B9%8B%E5%86%99%E9%94%81%E7%9A%84%E9%87%8A%E6%94%BE/%E5%86%99%E9%94%81%E6%89%A7%E8%A1%8C%E5%AE%8C%E6%88%90.png"></p>
+<p>此时读锁1被阻塞再<code>doAcquireShared</code>方法上，这时唤醒读锁1，读锁1线程获取读锁成功后会调用<code>setHeadAndPropagate()</code>方法<br>，判断出其后面还有等待的线程读锁2则调用<code>doReleaseShared()</code>方法。现在再来看<code>doReleaseShared()</code>方法，<br>这里分为两种情况：</p>
+<h4 id="在读锁1判断头节点之前，读锁2线程替换头节点成功"><a href="#在读锁1判断头节点之前，读锁2线程替换头节点成功" class="headerlink" title="在读锁1判断头节点之前，读锁2线程替换头节点成功"></a>在读锁1判断头节点之前，读锁2线程替换头节点成功</h4><blockquote>
+<p>读锁1将自身的<code>waitStatus</code>字段设置为0(<code>compareAndSetWaitStatus(h, Node.SIGNAL, 0</code>设置失败则循环设置)，<br>并唤醒读锁2之后，读锁2立刻加锁成功，会将头节点设置为自身节点(thread字段置空，如下图），读锁1的h会与头节点不同</p>
+<blockquote>
+<p><img src="/2022/08/java/lock/ReentrantReadWriteLock/%E8%AF%BB%E5%86%99%E9%94%81%E4%B9%8B%E5%86%99%E9%94%81%E7%9A%84%E9%87%8A%E6%94%BE/%E5%A4%B4%E8%8A%82%E7%82%B9%E5%8F%91%E7%94%9F%E5%8F%98%E5%8C%96.png"></p>
+<p>   那么读锁1线程会在这个循环里不能退出，第二次循环的时候<code>h</code>字段会变成曾经的读锁2线程对应的节点，</p>
+<ul>
+<li><p>读锁2线程此时是被唤醒的，读锁2线程也会调用<code>setHeadAndPropagate()</code>方法去唤醒读锁3线程。<br>   假设是读锁2线程唤醒了读锁3，读锁3线程会将头节点设置为自身节点，而读锁1线程的<code>h</code>字段保存的头节点还没更改依然是<br>   读锁线程2的情况下，<code>CAS</code>更改头节点的<code>waitStatus</code>状态操作将会失败，会进入到<code>else if (ws == 0 &amp;&amp; !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))</code>当中执行下一次循环，还是不能结束。</p>
+</li>
+<li><p>由于读锁1在循环，所以有可能是读锁1唤醒了读锁3，读锁2对应的线程<code>CAS</code>更改头节点的<code>waitStatus</code>状态操作将会失败，<br>会进入到<code>else if (ws == 0 &amp;&amp; !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))</code>当中执行下一次循环，还是不能结束。</p>
+</li>
+<li><p>假设读锁3对应的线程由读锁2唤醒，读锁三完成了设置头节点的操作，此时读锁1刚好进行一次循环，并且没有竞争，那么读锁1可以立刻唤醒读锁4</p>
+</li>
+</ul>
+<p>   假设队列长度足够，那么就会产生一个唤醒的风暴，前面的线程都在唤醒后面的线程，这样可以快速的唤醒起队列中下一个写锁之前的所有申请读锁的线程。<br>   这样的风暴会在碰到一个申请写锁的线程或者一直到队列尾都没有写锁，唤醒了所有的线程之后结束，当然中间可能存在部分的线程已经停止了唤醒操作(<br>   在判断<code>h==head</code>完成之前，头节点没有被替换)</p>
+<ul>
+<li><p>碰到写锁：由于读锁已经被获取，唤醒一个写锁线程后，并不能完成加锁操作，因此头节点不会被替换，直到所有的读锁被释放，写锁才能尝试加锁<br> 所以在这个位置将会结束这场风暴。</p>
+</li>
+<li><p>到达队尾:到达队尾后头节点将不会变化，风暴结束</p>
+</li>
+</ul>
+</blockquote>
+</blockquote>
+<h4 id="在读锁1判断头节点完成之前，读锁2线程都没有替换头节点"><a href="#在读锁1判断头节点完成之前，读锁2线程都没有替换头节点" class="headerlink" title="在读锁1判断头节点完成之前，读锁2线程都没有替换头节点"></a>在读锁1判断头节点完成之前，读锁2线程都没有替换头节点</h4><blockquote>
+<p>读锁1唤醒读锁2对应的线程，但是读锁2处于某些原因并没有立刻加锁成功，或者加锁成功但是换么有用自身节点将头节点替换，此时<code>if (h == head)</code><br>将被满足，从而读锁1线程退出，后面的线程依然会被唤醒，因为读锁2线程已经被唤醒，可以继续后面的唤醒操作</p>
+</blockquote>
+<h2 id="以读锁开始的队列"><a href="#以读锁开始的队列" class="headerlink" title="以读锁开始的队列"></a>以读锁开始的队列</h2><p>就是以写锁开始的队列写锁执行完成后的唤醒过程，(当前锁状态中读锁被获取，且队列的头节点得后继节点不存在写锁申请，理论不会出现这种场景)</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>doReleaseShared()</code>方法会以一种风暴的形式唤醒后续的第一个获取写锁之前的所有获取读锁的节点，没有写锁将会唤醒整个队列                                             </p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 bmilk
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Du Jian
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="dujian0068/blog"
+    data-repo-id="R_kgDOGryLBA"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOGryLBM4ChDAf"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+</body>
+</html>

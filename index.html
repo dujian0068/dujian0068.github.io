@@ -227,12 +227,12 @@
         
         <span class="tag">
             
-            <a href="/tags/Kafka/" style="color: #03a9f4">Kafka</a>
+            <a href="/tags/Kafka/" style="color: #ffa2c4">Kafka</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/MQ/" style="color: #00bcd4">MQ</a>
+            <a href="/tags/MQ/" style="color: #03a9f4">MQ</a>
         </span>
         
     </div>
@@ -286,7 +286,7 @@
         
         <span class="tag">
             
-            <a href="/tags/%E5%B7%A5%E4%BD%9C/" style="color: #00a596">工作</a>
+            <a href="/tags/%E5%B7%A5%E4%BD%9C/" style="color: #03a9f4">工作</a>
         </span>
         
     </div>
@@ -340,7 +340,7 @@
         
         <span class="tag">
             
-            <a href="/tags/%E6%97%A5%E5%BF%97/" style="color: #03a9f4">日志</a>
+            <a href="/tags/%E6%97%A5%E5%BF%97/" style="color: #ffa2c4">日志</a>
         </span>
         
     </div>
@@ -389,12 +389,12 @@
         
         <span class="tag">
             
-            <a href="/tags/Java/" style="color: #ff7d73">Java</a>
+            <a href="/tags/Java/" style="color: #00a596">Java</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/SPI/" style="color: #00bcd4">SPI</a>
+            <a href="/tags/SPI/" style="color: #03a9f4">SPI</a>
         </span>
         
     </div>
@@ -443,12 +443,12 @@
         
         <span class="tag">
             
-            <a href="/tags/Java/" style="color: #ff7d73">Java</a>
+            <a href="/tags/Java/" style="color: #00a596">Java</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/%E8%AF%AD%E6%B3%95%E7%B3%96/" style="color: #03a9f4">语法糖</a>
+            <a href="/tags/%E8%AF%AD%E6%B3%95%E7%B3%96/" style="color: #00bcd4">语法糖</a>
         </span>
         
     </div>
@@ -456,8 +456,8 @@
 </div>
 
 <div class="post">
-    <a href="/2022/08/java/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/">
-        <h2 class="post-title">从JDK源码理解java引用</h2>
+    <a href="/2022/08/java/lock/ReentrantReadWriteLock/%E8%AF%BB%E5%86%99%E9%94%81%E4%B9%8B%E5%86%99%E9%94%81%E7%9A%84%E9%87%8A%E6%94%BE/">
+        <h2 class="post-title">读写锁之写锁的释放——doReleaseShared()方法分析</h2>
     </a>
     <div class="category-and-date">
         
@@ -474,7 +474,7 @@
             <span class="icon">
                 <i class="fa-solid fa-calendar-days"></i>
             </span>
-            2022/8/14
+            2022/8/15
         </span>
         
         
@@ -482,7 +482,7 @@
     <div class="description">
         <div class="content" v-pre>
             
-            <p>在<code>JDK 1.2</code>之后，把对象的引用分为了四种类型，分别为：强引用、软应用、弱引用和虚引用，以方便控制java对象的生命周期。</p>
+            <p>写锁的释放相对读锁来说复杂一些，读锁释放只需要唤醒等待队列中的写锁，并且只唤醒一个， 但是写锁释时，如果紧接着的都是读锁请求，那么就需要唤醒所有的读锁请求，因为读锁时共享锁， 所有的读锁请求可以同时被满足</p>
 
             
         </div>
@@ -497,16 +497,16 @@
         
         <span class="tag">
             
-            <a href="/tags/Java/" style="color: #00a596">Java</a>
+            <a href="/tags/Java/" style="color: #00bcd4">Java</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/%E5%BC%95%E7%94%A8/" style="color: #ffa2c4">引用</a>
+            <a href="/tags/Lock/" style="color: #ff7d73">Lock</a>
         </span>
         
     </div>
-    <a href="/2022/08/java/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/" class="go-post">阅读全文</a>
+    <a href="/2022/08/java/lock/ReentrantReadWriteLock/%E8%AF%BB%E5%86%99%E9%94%81%E4%B9%8B%E5%86%99%E9%94%81%E7%9A%84%E9%87%8A%E6%94%BE/" class="go-post">阅读全文</a>
 </div>
 
 <div class="post">
@@ -551,12 +551,12 @@
         
         <span class="tag">
             
-            <a href="/tags/Java/" style="color: #00bcd4">Java</a>
+            <a href="/tags/Java/" style="color: #03a9f4">Java</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/Lock/" style="color: #ffa2c4">Lock</a>
+            <a href="/tags/Lock/" style="color: #ff7d73">Lock</a>
         </span>
         
     </div>
@@ -660,7 +660,7 @@
         
         <span class="tag">
             
-            <a href="/tags/Jvm/" style="color: #03a9f4">Jvm</a>
+            <a href="/tags/Jvm/" style="color: #ff7d73">Jvm</a>
         </span>
         
     </div>
@@ -668,17 +668,17 @@
 </div>
 
 <div class="post">
-    <a href="/2020/07/nio/Buffer%E7%9A%84%E5%88%9B%E5%BB%BA%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94ByteBuffer%E4%B8%BA%E4%BE%8B/">
-        <h2 class="post-title">Buffer的创建及使用源码分析——ByteBuffer为例</h2>
+    <a href="/2021/08/java/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/">
+        <h2 class="post-title">从JDK源码理解java引用</h2>
     </a>
     <div class="category-and-date">
         
         <span class="category">
-            <a href="/categories/NIO/">
+            <a href="/categories/Java/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                NIO
+                Java
             </a>
         </span>
         
@@ -686,7 +686,7 @@
             <span class="icon">
                 <i class="fa-solid fa-calendar-days"></i>
             </span>
-            2020/7/2
+            2021/8/14
         </span>
         
         
@@ -694,7 +694,7 @@
     <div class="description">
         <div class="content" v-pre>
             
-            <p>在<code>Java</code>中提供了7种类型的<code>Buffer</code>,每一种类型的<code>Buffer</code>根据分配内存的方式不同又可以分为 直接缓冲区和非直接缓冲区。</p>
+            <p>在<code>JDK 1.2</code>之后，把对象的引用分为了四种类型，分别为：强引用、软应用、弱引用和虚引用，以方便控制java对象的生命周期。</p>
 
             
         </div>
@@ -709,21 +709,16 @@
         
         <span class="tag">
             
-            <a href="/tags/Java/" style="color: #03a9f4">Java</a>
+            <a href="/tags/Java/" style="color: #00a596">Java</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/NIO/" style="color: #ff7d73">NIO</a>
-        </span>
-        
-        <span class="tag">
-            
-            <a href="/tags/Buffer/" style="color: #03a9f4">Buffer</a>
+            <a href="/tags/%E5%BC%95%E7%94%A8/" style="color: #ffa2c4">引用</a>
         </span>
         
     </div>
-    <a href="/2020/07/nio/Buffer%E7%9A%84%E5%88%9B%E5%BB%BA%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94ByteBuffer%E4%B8%BA%E4%BE%8B/" class="go-post">阅读全文</a>
+    <a href="/2021/08/java/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%90%86%E8%A7%A3java%E5%BC%95%E7%94%A8/" class="go-post">阅读全文</a>
 </div>
 
 
@@ -755,7 +750,7 @@
         <div class="name">Du Jian</div>
         <div class="description">
             
-            <p>忍一时越想越亏，退一步越想越气</p>
+            <p>人生若只如初见</p>
 
         </div>
         

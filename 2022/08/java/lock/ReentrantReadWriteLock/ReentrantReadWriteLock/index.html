@@ -192,14 +192,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/Java/" style="color: #ff7d73">
+                <a href="/tags/Java/" style="color: #03a9f4">
                     Java
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/Lock/" style="color: #00a596">
+                <a href="/tags/Lock/" style="color: #ff7d73">
                     Lock
                 </a>
             </span>
@@ -232,6 +232,7 @@
 <li><a href="#%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9A%E4%B9%89">写锁的定义</a></li>
 <li><a href="#%E5%86%99%E9%94%81%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95">写锁的一些方法</a></li>
 <li><a href="#%E5%86%99%E9%94%81%E7%9A%84%E5%8A%A0%E9%94%81">写锁的加锁</a></li>
+<li><a href="#%E5%86%99%E9%94%81%E7%9A%84%E9%87%8A%E6%94%BE">写锁的释放</a></li>
 </ul>
 </li>
 <li><a href="#%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95">读写锁的一些其他方法</a></li>
@@ -1419,6 +1420,8 @@ protected final boolean tryAcquire(int acquires) &#123;
 &#125;
 </code></pre>
 <p><code>acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</code>与可重入锁完全相同，<a target="_blank" rel="noopener" href="https://blog.bmilk.net/2022/08/java/lock/ReentrantLock/ReentrantLock%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">可以参考这里</a></p>
+<h4 id="写锁的释放"><a href="#写锁的释放" class="headerlink" title="写锁的释放"></a>写锁的释放</h4><p>写锁的释放相对读锁来说复杂一些，读锁释放只需要唤醒等待队列中的写锁，并且只唤醒一个， 但是写锁释时，如果紧接着的都是读锁请求，那么就需要唤醒所有的读锁请求，因为读锁时共享锁， 所有的读锁请求可以同时被满足。</p>
+<p>详细内容请<a target="_blank" rel="noopener" href="https://blog.bmilk.net/2022/08/java/lock/ReentrantReadWriteLock/%E5%86%99%E9%94%81%E7%9A%84%E9%87%8A%E6%94%BE/">参考这里</a></p>
 <h2 id="读写锁的一些其他方法"><a href="#读写锁的一些其他方法" class="headerlink" title="读写锁的一些其他方法"></a>读写锁的一些其他方法</h2><table>
 <thead>
 <tr>
