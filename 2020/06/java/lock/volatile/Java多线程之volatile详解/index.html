@@ -175,11 +175,11 @@
 
         
         <span class="category">
-            <a href="/categories/JVM/">
+            <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                JVM
+                多线程
             </a>
         </span>
         
@@ -192,22 +192,29 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="color: #ffa2c4">
+                <a href="/tags/Java/" style="color: #ff7d73">
+                    Java
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="color: #00a596">
                     多线程
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/JVM/" style="color: #ff7d73">
-                    JVM
+                <a href="/tags/Lock/" style="color: #03a9f4">
+                    Lock
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/Lock/" style="color: #00bcd4">
-                    Lock
+                <a href="/tags/volatile/" style="color: #00bcd4">
+                    volatile
                 </a>
             </span>
             
@@ -332,13 +339,13 @@
 <li>原子性：对任意单个<code>volatile</code>变量的读&#x2F;写具有原子性，但对于类似于<code>i++</code>这种复合操作不具有原子性。</li>
 <li>有序性：</li>
 </ul>
-<h4 id="volatile-happens-before规则"><a href="#volatile-happens-before规则" class="headerlink" title="volatile happens-before规则"></a>volatile happens-before规则</h4><p> 根据<code>JMM</code>要求，共享变量存储在共享内存当中，工作内存存储一个共享变量的副本，<br> 线程对于贡献变量的修改其实是对于工作内存中变量的修改，如下图所示：<br> <img src="/2020/06/jvm/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/JMM.png" alt="JMM模型"><span class="image-caption">JMM模型</span><br> 以<strong>从多线程交替打印A和B开始</strong>章节中使用<code>volatile</code>关键字的实现为例来研究<code>volatile</code>关键字实现了什么：<br> 假设线程<code>A</code>在执行<code>num=1</code>之后<code>B</code>线程读取<code>num</code>指，则存在以下<code>happens-before</code>关系</p>
+<h4 id="volatile-happens-before规则"><a href="#volatile-happens-before规则" class="headerlink" title="volatile happens-before规则"></a>volatile happens-before规则</h4><p> 根据<code>JMM</code>要求，共享变量存储在共享内存当中，工作内存存储一个共享变量的副本，<br> 线程对于贡献变量的修改其实是对于工作内存中变量的修改，如下图所示：<br> <img src="/2020/06/java/lock/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/JMM.png" alt="JMM模型"><span class="image-caption">JMM模型</span><br> 以<strong>从多线程交替打印A和B开始</strong>章节中使用<code>volatile</code>关键字的实现为例来研究<code>volatile</code>关键字实现了什么：<br> 假设线程<code>A</code>在执行<code>num=1</code>之后<code>B</code>线程读取<code>num</code>指，则存在以下<code>happens-before</code>关系</p>
 <pre><code>1)  1 happens-before 2，3 happens-before 4
 2)  根据volatile规则有：2 happens-before 3
 3)  根据heppens-before传递规则有： 1 happens-before 4
 </code></pre>
 <p>至此线程的执行顺序是符合我们的期望的，那么<code>volatile</code>是如何保证一个线程对于共享变量的修改对于其他线程可见的呢？</p>
-<h4 id="volatile-内存语义"><a href="#volatile-内存语义" class="headerlink" title="volatile 内存语义"></a>volatile 内存语义</h4><p>根据<code>JMM</code>要求，对于一个变量的独写存在8个原子操作。对于一个共享变量的独写过程如下图所示：<br><img src="/2020/06/jvm/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E6%9C%AA%E4%BD%BF%E7%94%A8volatitle%E5%85%B3%E9%94%AE%E5%AD%97%E5%8F%98%E9%87%8F%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B.png" alt="未使用volatitle关键字变量使用过程"><span class="image-caption">未使用volatitle关键字变量使用过程</span><br>对于一个没有进行同步的共享变量，对其的使用过程分为<code>read</code>、<code>load</code>、<code>use</code>、<code>assign</code>以及不确定的<code>store</code>、<code>write</code>过程。<br>整个过程的语言描述如下：</p>
+<h4 id="volatile-内存语义"><a href="#volatile-内存语义" class="headerlink" title="volatile 内存语义"></a>volatile 内存语义</h4><p>根据<code>JMM</code>要求，对于一个变量的独写存在8个原子操作。对于一个共享变量的独写过程如下图所示：<br><img src="/2020/06/java/lock/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E6%9C%AA%E4%BD%BF%E7%94%A8volatitle%E5%85%B3%E9%94%AE%E5%AD%97%E5%8F%98%E9%87%8F%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B.png" alt="未使用volatitle关键字变量使用过程"><span class="image-caption">未使用volatitle关键字变量使用过程</span><br>对于一个没有进行同步的共享变量，对其的使用过程分为<code>read</code>、<code>load</code>、<code>use</code>、<code>assign</code>以及不确定的<code>store</code>、<code>write</code>过程。<br>整个过程的语言描述如下：</p>
 <pre><code>- 第一步：从共享内存中读取变量放入工作内存中(`read`、`load`)
 - 第二步：当执行引擎需要使用这个共享变量时从本地内存中加载至**CPU**中(`use`)
 - 第三步：值被更改后使用(`assign`)写回工作内存。
@@ -355,7 +362,7 @@
 </ul>
 </blockquote>
 <p>如果将这两个步骤综合起来，那么线程3读取一个<code>volatile</code>变量后，写线程1在写这个<code>volatile</code>变量之前所有可见的共享变量的值都将乐客变得对线程3可见。</p>
-<p><code>volatile</code>变量的读写过程如下图：<br><img src="/2020/06/jvm/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E4%BD%BF%E7%94%A8volatile%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E8%BF%87%E7%A8%8B.png" alt="使用volatile关键字的过程"><span class="image-caption">使用volatile关键字的过程</span><br>需要注意的是：在各个线程的工作内存中是存在<code>volatile</code>变量的值不一致的情况的，只是每次使用都会从共享内存读取并刷新，执行引擎看不到不一致的情况，<br>所以认为<code>volatile</code>变量在本地内存中不存在不一致问题。</p>
+<p><code>volatile</code>变量的读写过程如下图：<br><img src="/2020/06/java/lock/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E4%BD%BF%E7%94%A8volatile%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E8%BF%87%E7%A8%8B.png" alt="使用volatile关键字的过程"><span class="image-caption">使用volatile关键字的过程</span><br>需要注意的是：在各个线程的工作内存中是存在<code>volatile</code>变量的值不一致的情况的，只是每次使用都会从共享内存读取并刷新，执行引擎看不到不一致的情况，<br>所以认为<code>volatile</code>变量在本地内存中不存在不一致问题。</p>
 <h4 id="volatile-内存语义的实现"><a href="#volatile-内存语义的实现" class="headerlink" title="volatile 内存语义的实现"></a>volatile 内存语义的实现</h4><p>在前文<a target="_blank" rel="noopener" href="https://blog.bmilk.net/2020/06/jvm/JMM/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8B%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">Java内存模型</a>中<br>有提到重排序。为了实现<code>volatile</code>的内存语义，JMM会限制重排序的行为，具体限制如下表：</p>
 <table>
 <thead>
@@ -407,13 +414,13 @@
 - 在每个volatile读操作后面插入LoadLoad屏障
 - 在每个volatile读操作后面插入LoadStore屏障
 </code></pre>
-<p>插入内存屏障后<code>volatile</code>写操作过程如下图：<br><img src="/2020/06/jvm/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E6%8F%92%E5%85%A5%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%E5%90%8Evolatile%E5%86%99%E7%9A%84%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.png" alt="插入内存屏障后volatile写的指令执行过程"><span class="image-caption">插入内存屏障后volatile写的指令执行过程</span><br>插入内存屏障后<code>volatile</code>读操作过程如下图：<br><img src="/2020/06/jvm/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E6%8F%92%E5%85%A5%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%E5%90%8Evolatile%E8%AF%BB%E7%9A%84%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.png" alt="插入内存屏障后volatile读的指令执行过程"><span class="image-caption">插入内存屏障后volatile读的指令执行过程</span></p>
+<p>插入内存屏障后<code>volatile</code>写操作过程如下图：<br><img src="/2020/06/java/lock/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E6%8F%92%E5%85%A5%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%E5%90%8Evolatile%E5%86%99%E7%9A%84%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.png" alt="插入内存屏障后volatile写的指令执行过程"><span class="image-caption">插入内存屏障后volatile写的指令执行过程</span><br>插入内存屏障后<code>volatile</code>读操作过程如下图：<br><img src="/2020/06/java/lock/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E6%8F%92%E5%85%A5%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%E5%90%8Evolatile%E8%AF%BB%E7%9A%84%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.png" alt="插入内存屏障后volatile读的指令执行过程"><span class="image-caption">插入内存屏障后volatile读的指令执行过程</span></p>
 <p>至此在共享内存和工作内存中的<code>volatile</code>的写-读的工作过程全部完成</p>
 <p>但是现在的CPU中存在一个缓存，CPU读取或者修改数据的时候是从缓存中获取并修改数据，那么如何保证CPU缓存中的数据与共享内存中的一致，并且修改后写回共享内存呢？</p>
 <h2 id="CPU对于Volatile的支持"><a href="#CPU对于Volatile的支持" class="headerlink" title="CPU对于Volatile的支持"></a>CPU对于Volatile的支持</h2><blockquote>
 <p>缓存行：cpu缓存存储数据的基本单位，cpu不能使数据失效，但是可以使缓存行失效。</p>
 </blockquote>
-<p>对于CPU来说，CPU直接操作的内存时高速缓存，而每一个CPU都有自己L1、L2以及共享的L3级缓存，如下图：<br><img src="/2020/06/jvm/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84.png" alt="多处理器架构"><span class="image-caption">多处理器架构</span></p>
+<p>对于CPU来说，CPU直接操作的内存时高速缓存，而每一个CPU都有自己L1、L2以及共享的L3级缓存，如下图：<br><img src="/2020/06/java/lock/volatile/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bvolatile%E8%AF%A6%E8%A7%A3/%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84.png" alt="多处理器架构"><span class="image-caption">多处理器架构</span></p>
 <p>那么当CPU修改自身缓存中的被<code>volatile</code>修饰的共享变量时，如何保证对其他CPU的可见性。</p>
 <h4 id="缓存一致性协议"><a href="#缓存一致性协议" class="headerlink" title="缓存一致性协议"></a>缓存一致性协议</h4><p>在多处理器的情况下，每个处理器总是嗅探总线上传播的数据来检查自己的缓存是否过期，当处理器发现自己对应的缓存对应的地址被修改，<br>就会将当前处理器的缓存行设置为无效状态，当处理器对这个数据进行操作的时候，会重新从系统中把数据督导处理器的缓存里。这个协议被称之为缓存一致性协议。</p>
 <p>缓存一致性协议的实现又<code>MEI</code>、<code>MESI</code>、<code>MOSI</code>等等。</p>
