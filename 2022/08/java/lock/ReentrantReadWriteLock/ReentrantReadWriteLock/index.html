@@ -192,14 +192,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/Java/" style="color: #03a9f4">
+                <a href="/tags/Java/" style="color: #00bcd4">
                     Java
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/Lock/" style="color: #00a596">
+                <a href="/tags/Lock/" style="color: #03a9f4">
                     Lock
                 </a>
             </span>
@@ -1521,6 +1521,9 @@ protected final boolean tryAcquire(int acquires) &#123;
     
     
     
+    {%- if config.content_blocks.enable %}
+      <style type="text/css">{{ content_blocks_css() }}</style>
+    {%- endif %}
 </div>
 
             <footer id="footer">

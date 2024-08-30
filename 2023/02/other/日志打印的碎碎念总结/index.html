@@ -192,14 +192,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/Log/" style="color: #ffa2c4">
+                <a href="/tags/Log/" style="color: #ff7d73">
                     Log
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/%E6%97%A5%E5%BF%97/" style="color: #00a596">
+                <a href="/tags/%E6%97%A5%E5%BF%97/" style="color: #00bcd4">
                     日志
                 </a>
             </span>
@@ -303,6 +303,9 @@ log.debug(&quot;name=&#123;&#125;, age=&#123;&#125;&quot;, &quot;test&quot;, 1);
     
     
     
+    {%- if config.content_blocks.enable %}
+      <style type="text/css">{{ content_blocks_css() }}</style>
+    {%- endif %}
 </div>
 
             <footer id="footer">

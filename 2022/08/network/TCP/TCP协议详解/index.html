@@ -330,6 +330,9 @@
     
     
     
+    {%- if config.content_blocks.enable %}
+      <style type="text/css">{{ content_blocks_css() }}</style>
+    {%- endif %}
 </div>
 
             <footer id="footer">

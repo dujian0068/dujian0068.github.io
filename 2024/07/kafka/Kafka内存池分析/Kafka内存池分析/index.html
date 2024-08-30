@@ -192,14 +192,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/Kafka/" style="color: #03a9f4">
+                <a href="/tags/Kafka/" style="color: #ff7d73">
                     Kafka
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/MQ/" style="color: #00a596">
+                <a href="/tags/MQ/" style="color: #03a9f4">
                     MQ
                 </a>
             </span>
@@ -452,6 +452,9 @@ public class BufferPool &#123;
     
     
     
+    {%- if config.content_blocks.enable %}
+      <style type="text/css">{{ content_blocks_css() }}</style>
+    {%- endif %}
 </div>
 
             <footer id="footer">

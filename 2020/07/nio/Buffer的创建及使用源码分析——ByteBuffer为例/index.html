@@ -192,21 +192,21 @@
             
             <span class="tag">
                 
-                <a href="/tags/Java/" style="color: #ffa2c4">
+                <a href="/tags/Java/" style="color: #00a596">
                     Java
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/NIO/" style="color: #00a596">
+                <a href="/tags/NIO/" style="color: #ff7d73">
                     NIO
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/Buffer/" style="color: #ffa2c4">
+                <a href="/tags/Buffer/" style="color: #00a596">
                     Buffer
                 </a>
             </span>
@@ -603,6 +603,9 @@
     
     
     
+    {%- if config.content_blocks.enable %}
+      <style type="text/css">{{ content_blocks_css() }}</style>
+    {%- endif %}
 </div>
 
             <footer id="footer">
